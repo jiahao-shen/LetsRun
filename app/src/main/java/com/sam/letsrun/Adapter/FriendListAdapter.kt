@@ -4,15 +4,15 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sam.letsrun.Common.MyUtils
 import com.sam.letsrun.GlideApp
-import com.sam.letsrun.Model.FriendItem
+import com.sam.letsrun.Model.Friend
 import com.sam.letsrun.R
 
 /**
  * Created by sam on 2018/4/9.
  */
-class FriendListAdapter(data: ArrayList<FriendItem>) : BaseQuickAdapter<FriendItem, BaseViewHolder>(R.layout.item_friend_list, data) {
+class FriendListAdapter(data: ArrayList<Friend>) : BaseQuickAdapter<Friend, BaseViewHolder>(R.layout.item_friend_list, data) {
 
-    override fun convert(helper: BaseViewHolder, item: FriendItem) {
+    override fun convert(helper: BaseViewHolder, item: Friend) {
         helper.setText(R.id.userNameText, item.username)
                 .setText(R.id.userSignatureText, item.signature)
 

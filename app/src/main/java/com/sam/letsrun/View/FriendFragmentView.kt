@@ -1,6 +1,6 @@
 package com.sam.letsrun.View
 
-import com.sam.letsrun.Model.FriendItem
+import com.sam.letsrun.Model.Friend
 import com.sam.letsrun.Model.SearchUserResponse
 
 /**
@@ -16,6 +16,6 @@ interface FriendFragmentView {
 
     fun loadFriendListError()
 
-    fun loadFriendListSuccess(list: ArrayList<FriendItem>)
+    fun loadFriendListSuccess(list: ArrayList<Friend>)
 
 }

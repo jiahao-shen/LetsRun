@@ -2,13 +2,9 @@ package com.sam.letsrun.Fragment
 
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
@@ -36,7 +32,7 @@ import com.sam.letsrun.Common.Const
 import com.sam.letsrun.Common.MyUtils
 import com.sam.letsrun.GlideApp
 import com.sam.letsrun.Model.AddFriendRequest
-import com.sam.letsrun.Model.FriendItem
+import com.sam.letsrun.Model.Friend
 import com.sam.letsrun.Model.SearchUserResponse
 import com.sam.letsrun.Model.User
 import com.sam.letsrun.Presenter.FriendFragmentPresenter
@@ -49,7 +45,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.toast
-import rx.Observable
 
 class FriendFragment : Fragment(), FriendFragmentView {
 
@@ -315,14 +310,14 @@ class FriendFragment : Fragment(), FriendFragmentView {
         friendRefreshLayout.finishRefresh(300, false)
     }
 
-    override fun loadFriendListSuccess(list: ArrayList<FriendItem>) {
-        friendRecycleList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+    override fun loadFriendListSuccess(list: ArrayList<Friend>) {
+        friendRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val adapter = FriendListAdapter(list)
         adapter.emptyView = View.inflate(context, R.layout.friend_list_empty, null)
-        friendRecycleList.adapter = adapter
+        friendRecyclerView.adapter = adapter
         val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         decoration.setDrawable(ContextCompat.getDrawable(this.context!!, R.drawable.friend_list_decoration)!!)
-        friendRecycleList.addItemDecoration(decoration)
+        friendRecyclerView.addItemDecoration(decoration)
         friendRefreshLayout.finishRefresh(300, true)
     }
 }// Required empty public constructor

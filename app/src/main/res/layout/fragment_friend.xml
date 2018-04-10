@@ -18,17 +18,17 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/friendFragmentBackground"
+                android:id="@+id/friendFragmentActionBar"
                 android:background="#4A64FB"
                 android:layout_width="match_parent"
-                android:layout_height="140dp" />
+                android:layout_height="120dp" />
 
             <TextView
                 android:text="好友"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:textColor="#ffffff"
                 android:textSize="25sp"
                 android:layout_width="wrap_content"
@@ -36,19 +36,19 @@
 
             <com.miguelcatalan.materialsearchview.MaterialSearchView
                 android:id="@+id/friendSearch"
-                app:layout_constraintBottom_toBottomOf="@+id/friendFragmentBackground"
+                app:layout_constraintBottom_toBottomOf="@+id/friendFragmentActionBar"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginBottom="10dp"
                 android:layout_width="280dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="50dp"/>
 
             <Button
                 android:id="@+id/searchButton"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/friendSearch"
-                app:layout_constraintBottom_toBottomOf="@+id/friendFragmentBackground"
-                android:layout_marginBottom="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/friendFragmentActionBar"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/ic_action_action_search"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
@@ -67,7 +67,7 @@
                 android:layout_height="50dp"/>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/friendRecycleList"
+                android:id="@+id/friendRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

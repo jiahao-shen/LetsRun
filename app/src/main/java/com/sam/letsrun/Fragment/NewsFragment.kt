@@ -3,21 +3,54 @@ package com.sam.letsrun.Fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.sam.letsrun.Adapter.NewsAdapter
+import com.sam.letsrun.Model.News
+import com.sam.letsrun.Presenter.NewsFragmentPresenter
 import com.sam.letsrun.R
+import com.sam.letsrun.View.NewsFragmentView
+import kotlinx.android.synthetic.main.fragment_news.*
+import org.jetbrains.anko.support.v4.toast
 
 /**
  * 新闻fragment
  */
-class NewsFragment : Fragment() {
+class NewsFragment : Fragment(), NewsFragmentView {
 
+    private var presenter = NewsFragmentPresenter()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_news, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        presenter.mView = this
+        presenter.loadNews()
+
+        newsRefreshLayout.setOnRefreshListener {
+            presenter.loadNews()
+        }
+
+    }
+
+    override fun loadSuccess(newsList: ArrayList<News>) {
+        val adapter = NewsAdapter(newsList)
+        newsRecyclerView.layoutManager = LinearLayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
+        newsRecyclerView.adapter = adapter
+        val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        decoration.setDrawable(ContextCompat.getDrawable(this.context!!, R.drawable.friend_list_decoration)!!)
+        newsRecyclerView.addItemDecoration(decoration)
+        newsRefreshLayout.finishRefresh(300, true)
+    }
+
+    override fun loadError() {
+        toast("加载失败,请稍后再试")
+        newsRefreshLayout.finishRefresh(300, false)
+    }
 }// Required empty public constructor

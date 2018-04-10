@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:maxEms="30"
+            android:maxLength="20"
             android:maxLines="1"
             android:text="你好啊" />
 

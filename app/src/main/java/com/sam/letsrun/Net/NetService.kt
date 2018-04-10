@@ -1,5 +1,6 @@
 package com.sam.letsrun.Net
 
+import com.sam.letsrun.Common.Const
 import com.sam.letsrun.Model.*
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -42,4 +43,6 @@ interface NetService {
     @POST("LoadFriendList.php")
     fun loadFriendList(@Part("request") request: String): Call<LoadFriendListResponse>
 
+    @GET(Const.NEWS_HTTP_ADDRESS)
+    fun loadNews(): Call<NewsResponse>
 }

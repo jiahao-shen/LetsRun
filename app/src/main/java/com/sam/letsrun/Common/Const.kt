@@ -23,6 +23,7 @@ class Const {
         /*--LOCAL_FILE--*/
         val LOCAL_PATH = "${Environment.getExternalStorageDirectory()}/LetsRun"
 
+
         /*--SOCKET_CODE--*/
         const val SOCKET_PING_CODE = 0
         const val SOCKET_LOGIN_CODE = 1
@@ -66,8 +67,6 @@ class Const {
         const val SELECT_IMAGE_PHOTO = 101
         const val SELECT_IMAGE_ALBUM = 102
 
-
-
-
+        const val NEWS_HTTP_ADDRESS = "http://v.juhe.cn/toutiao/index?type=tiyu&key=1b42a673db5d082403746c1c670ac6ac"
     }
 }
