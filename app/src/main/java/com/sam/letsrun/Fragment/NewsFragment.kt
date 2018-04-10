@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.sam.letsrun.Adapter.NewsAdapter
 import com.sam.letsrun.Model.News
 import com.sam.letsrun.Presenter.NewsFragmentPresenter
@@ -47,6 +49,18 @@ class NewsFragment : Fragment(), NewsFragmentView {
         decoration.setDrawable(ContextCompat.getDrawable(this.context!!, R.drawable.friend_list_decoration)!!)
         newsRecyclerView.addItemDecoration(decoration)
         newsRefreshLayout.finishRefresh(300, true)
+        adapter.setOnItemClickListener { _, _, position ->
+            val news = adapter.getItem(position) as News
+            val webDialog = MaterialDialog.Builder(context!!)
+                    .customView(R.layout.dialog_webview, true)
+                    .positiveText("关闭")
+                    .build()
+
+            val rootView: View = webDialog.customView!!
+            val webView: WebView = rootView.findViewById(R.id.webView)
+            webView.loadUrl(news.url)
+            webDialog.show()
+        }
     }
 
     override fun loadError() {

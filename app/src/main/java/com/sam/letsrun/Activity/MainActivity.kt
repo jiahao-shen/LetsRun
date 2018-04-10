@@ -88,9 +88,9 @@ class MainActivity : AppCompatActivity(), MainView {
 
         friendFragment.mView = this
 
-        fragmentList.add(sportFragment)
-        fragmentList.add(musicFragment)
         fragmentList.add(newsFragment)
+        fragmentList.add(musicFragment)
+        fragmentList.add(sportFragment)
         fragmentList.add(friendFragment)
         fragmentList.add(settingFragment)
 
@@ -104,9 +104,9 @@ class MainActivity : AppCompatActivity(), MainView {
         val models = ArrayList<NavigationTabBar.Model>()
 
         models.add(NavigationTabBar.Model.Builder(
-                ContextCompat.getDrawable(this, R.drawable.ic_navigation_sport),
+                ContextCompat.getDrawable(this, R.drawable.ic_navigation_news),
                 Color.parseColor("#eeeeee")
-        ).title("运动")
+        ).title("资讯")
                 .build())
 
         models.add(NavigationTabBar.Model.Builder(
@@ -115,10 +115,11 @@ class MainActivity : AppCompatActivity(), MainView {
         ).title("音乐")
                 .build())
 
+
         models.add(NavigationTabBar.Model.Builder(
-                ContextCompat.getDrawable(this, R.drawable.ic_navigation_news),
+                ContextCompat.getDrawable(this, R.drawable.ic_navigation_sport),
                 Color.parseColor("#eeeeee")
-        ).title("咨询")
+        ).title("运动")
                 .build())
 
         models.add(NavigationTabBar.Model.Builder(
@@ -136,7 +137,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
         bottomNavigation.models = models
         //设置首页
-        bottomNavigation.setViewPager(mViewPager, 3)
+        bottomNavigation.setViewPager(mViewPager, 2)
 
     }
 
