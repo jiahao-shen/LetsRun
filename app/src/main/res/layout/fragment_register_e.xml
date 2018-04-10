@@ -1,0 +1,62 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/birthdayText"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center"
+        android:hint="请填写生日"
+        app:met_textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.452"
+        app:met_baseColor="@color/colorPrimary"
+        app:met_iconLeft="@drawable/ic_birthday" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/bloodText"
+        android:hint="请填写血型"
+        android:gravity="center"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="@+id/birthdayText"
+        app:layout_constraintRight_toRightOf="@+id/birthdayText"
+        app:layout_constraintTop_toBottomOf="@+id/birthdayText"
+        android:layout_marginTop="20dp"
+        app:met_iconLeft="@drawable/ic_blood"
+        android:inputType="none"
+        android:focusable="false"
+        app:met_textColor="#000000"
+        android:focusableInTouchMode="false"
+        android:layout_width="250dp"
+        app:met_baseColor="@color/colorPrimary"
+        android:layout_height="wrap_content" />
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/nextButton"
+        android:text="下一步"
+        app:bootstrapBrand="danger"
+        app:bootstrapSize="xl"
+        app:bootstrapText="下一步"
+        app:roundedCorners="true"
+        app:layout_constraintLeft_toLeftOf="@+id/bloodText"
+        app:layout_constraintRight_toRightOf="@+id/bloodText"
+        app:layout_constraintTop_toBottomOf="@+id/bloodText"
+        android:layout_marginTop="20dp"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content" />
+
+</android.support.constraint.ConstraintLayout>
+

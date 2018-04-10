@@ -1,0 +1,71 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sam.letsrun.Fragment.SportFragment">
+
+    <com.liulishuo.magicprogresswidget.MagicProgressCircle
+        android:id="@+id/sportProgress"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.464"
+        app:mpc_default_color="#eeeeee" />
+
+    <TextView
+        android:id="@+id/text_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="今日步数"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/sportProgress"
+        app:layout_constraintLeft_toLeftOf="@+id/sportProgress"
+        app:layout_constraintRight_toRightOf="@+id/sportProgress"
+        app:layout_constraintTop_toTopOf="@+id/sportProgress"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <TextView
+        android:id="@+id/currentStepsView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:textSize="60sp"
+        app:layout_constraintLeft_toLeftOf="@+id/text_1"
+        app:layout_constraintRight_toRightOf="@+id/text_1"
+        app:layout_constraintTop_toBottomOf="@+id/text_1" />
+
+    <TextView
+        android:id="@+id/goalStepsView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="目标步数:10000"
+        app:layout_constraintLeft_toLeftOf="@+id/currentStepsView"
+        app:layout_constraintRight_toRightOf="@+id/currentStepsView"
+        app:layout_constraintTop_toBottomOf="@+id/currentStepsView" />
+
+    <at.markushi.ui.CircleButton
+        android:id="@+id/sportButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/ic_running"
+        app:cb_color="#43e97b"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/sportProgress"
+        app:layout_constraintRight_toRightOf="@+id/sportProgress"
+        app:layout_constraintTop_toBottomOf="@+id/sportProgress"
+        app:layout_constraintVertical_bias="0.1" />
+
+</android.support.constraint.ConstraintLayout>

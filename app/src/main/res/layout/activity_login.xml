@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sam.letsrun.Activity.LoginActivity">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/telephoneText"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="手机号"
+        android:inputType="number"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4"
+        app:met_floatingLabel="highlight"
+        app:met_iconLeft="@drawable/ic_telephone"
+        app:met_primaryColor="@color/colorPrimary" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/passwordText"
+        android:layout_width="250dp"
+        android:hint="密码"
+        android:textSize="20sp"
+        android:inputType="textPassword"
+        app:met_iconLeft="@drawable/ic_password"
+        app:layout_constraintLeft_toLeftOf="@+id/telephoneText"
+        app:layout_constraintRight_toRightOf="@+id/telephoneText"
+        app:layout_constraintTop_toBottomOf="@+id/telephoneText"
+        android:layout_marginTop="20dp"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/colorPrimary"
+        android:layout_height="wrap_content" />
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/loginButton"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        app:roundedCorners="true"
+        app:buttonMode="regular"
+        app:bootstrapBrand="primary"
+        app:bootstrapText="登录"
+        app:bootstrapSize="xl"
+        app:layout_constraintEnd_toEndOf="@+id/passwordText"
+        app:layout_constraintStart_toStartOf="@+id/passwordText"
+        app:layout_constraintTop_toBottomOf="@+id/passwordText" />
+
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="@+id/loginButton"
+        app:layout_constraintLeft_toLeftOf="@+id/loginButton"
+        app:layout_constraintTop_toBottomOf="@id/loginButton"
+        android:layout_marginTop="20dp"
+        >
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:alpha="0.1"
+            android:layout_gravity="center_vertical"
+            android:background="@color/bootstrap_gray_dark"/>
+
+        <com.beardedhen.androidbootstrap.AwesomeTextView
+            android:id="@+id/registerButton"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:text="注册"
+            android:textSize="25sp"
+            app:bootstrapBrand="regular"
+            android:layout_height="wrap_content"
+            />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:alpha="0.1"
+            android:layout_gravity="center_vertical"
+            android:background="@color/bootstrap_gray_dark"/>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
