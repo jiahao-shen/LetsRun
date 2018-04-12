@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
         bottomNavigation.models = models
         //设置首页
-        bottomNavigation.setViewPager(mViewPager, 2)
+        bottomNavigation.setViewPager(mViewPager, 4)
 
     }
 

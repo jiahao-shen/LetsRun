@@ -21,6 +21,7 @@ import com.beardedhen.androidbootstrap.BootstrapButton
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.Utils
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.miguelcatalan.materialsearchview.MaterialSearchView
@@ -173,6 +174,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
             Const.USER_IS_SELF -> {     //搜索的是自己
                 GlideApp.with(this)
                         .load(MyUtils.getImageUrl(user.telephone))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .placeholder(R.drawable.ic_user_image)
                         .into(searchImagView)
 
@@ -201,6 +203,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
                 GlideApp.with(this)
                         .load(MyUtils.getImageUrl(response!!.telephone!!))
                         .placeholder(R.drawable.ic_user_image)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(searchImagView)
 
                 searchUserName.text = response.username
@@ -217,6 +220,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
                 GlideApp.with(this)
                         .load(MyUtils.getImageUrl(response!!.telephone!!))
                         .placeholder(R.drawable.ic_user_image)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(searchImagView)
 
                 searchUserName.text = response.username
@@ -307,7 +311,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
 
     override fun loadFriendListError() {
         toast("网络异常,请稍后再试")
-        friendRefreshLayout.finishRefresh(300, false)
+        friendRefreshLayout.finishRefresh(false)
     }
 
     override fun loadFriendListSuccess(list: ArrayList<Friend>) {
@@ -318,6 +322,6 @@ class FriendFragment : Fragment(), FriendFragmentView {
         val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         decoration.setDrawable(ContextCompat.getDrawable(this.context!!, R.drawable.friend_list_decoration)!!)
         friendRecyclerView.addItemDecoration(decoration)
-        friendRefreshLayout.finishRefresh(300, true)
+        friendRefreshLayout.finishRefresh(true)
     }
 }// Required empty public constructor

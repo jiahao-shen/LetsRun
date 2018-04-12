@@ -3,5 +3,16 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="navigationWhite">#ffffff</color>
+    <color name="white">#ffffff</color>
+    <color name="action_bar">#4A64FB</color>
+    <color name="black">#000000</color>
+    <color name="ntb_bg_color">#eeeeee</color>
+    <color name="ntb_active_color">#0000CD</color>
+    <color name="ntb_badge_bg_color">#DC143C</color>
+    <color name="ntb_inactive_color">#333333</color>
+    <color name="mpc_default_color">#eeeeee</color>
+    <color name="cb_color">#43e97b</color>
+    <color name="menu_color_normal">#43515D</color>
+    <color name="menu_color_pressed">#43515D</color>
+    <color name="linearlayout_pressed_gray">#cccccc</color>
 </resources>

@@ -1,5 +1,6 @@
 package com.sam.letsrun.Adapter
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sam.letsrun.Common.MyUtils
@@ -24,6 +25,7 @@ class FriendListAdapter(data: ArrayList<Friend>) : BaseQuickAdapter<Friend, Base
 
         GlideApp.with(mContext)
                 .load(MyUtils.getImageUrl(item.telephone))
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.drawable.ic_user_image)
                 .into(helper.getView(R.id.userImageView))
     }

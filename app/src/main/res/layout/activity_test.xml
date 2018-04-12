@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sam.letsrun.TestActivity">
+
+    <com.sackcentury.shinebuttonlib.ShineButton
+        android:layout_width="50dp"
+        app:siShape="@raw/like"
+        app:btn_color="#999999"
+        app:big_shine_color="#E8222D"
+        app:btn_fill_color="@color/action_bar"
+        app:allow_random_color="true"
+        app:enable_flashing="false"
+        android:layout_height="50dp" />
+
+</android.support.constraint.ConstraintLayout>

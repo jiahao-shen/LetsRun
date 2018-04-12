@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -40,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="0.00"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="35sp" />
 
             <TextView
@@ -48,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="距离"
-                android:textColor="#000000" />
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
@@ -67,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="35sp" />
 
             <TextView
@@ -75,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="时间"
-                android:textColor="#000000" />
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
@@ -90,8 +91,8 @@
         android:layout_marginLeft="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:menu_colorNormal="#43515D"
-        app:menu_colorPressed="#43515D"
+        app:menu_colorNormal="@color/menu_color_normal"
+        app:menu_colorPressed="@color/menu_color_pressed"
         app:menu_icon="@drawable/ic_switch_map"
         app:menu_labels_position="right">
 
@@ -102,7 +103,8 @@
             android:src="@drawable/ic_map_model_1"
             app:fab_colorNormal="#43515D"
             app:fab_colorPressed="#43515D"
-            app:fab_label="正常模式" />
+            app:fab_label="正常模式"
+            tools:ignore="VectorDrawableCompat" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/mapModelButtonB"
@@ -111,7 +113,8 @@
             android:src="@drawable/ic_map_model_2"
             app:fab_colorNormal="#43515D"
             app:fab_colorPressed="#43515D"
-            app:fab_label="卫星模式" />
+            app:fab_label="卫星模式"
+            tools:ignore="VectorDrawableCompat" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/mapModelButtonC"
@@ -120,7 +123,8 @@
             android:src="@drawable/ic_map_model_3"
             app:fab_colorNormal="#43515D"
             app:fab_colorPressed="#43515D"
-            app:fab_label="夜间模式" />
+            app:fab_label="夜间模式"
+            tools:ignore="VectorDrawableCompat" />
 
     </com.github.clans.fab.FloatingActionMenu>
 
@@ -134,7 +138,8 @@
         app:fab_colorNormal="#43515D"
         app:fab_colorPressed="#43515D"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        tools:ignore="VectorDrawableCompat" />
 
 
 </android.support.constraint.ConstraintLayout>

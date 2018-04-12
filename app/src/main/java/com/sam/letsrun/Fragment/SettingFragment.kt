@@ -9,31 +9,34 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
 import com.sam.letsrun.Activity.LoginActivity
-import com.sam.letsrun.Adapter.MyFragmentAdapter
 import com.sam.letsrun.Common.MyUtils
 import com.sam.letsrun.GlideApp
 import com.sam.letsrun.Model.User
 import com.sam.letsrun.Presenter.SettingFragmentPresenter
 import com.sam.letsrun.R
 import com.sam.letsrun.View.SettingFragmentView
+import com.scwang.smartrefresh.layout.api.RefreshHeader
+import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener
 import kotlinx.android.synthetic.main.fragment_setting.*
+import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.toast
+import kotlin.math.max
 
 /**
  * 设置fragment
  */
+
+
 @Suppress("UNREACHABLE_CODE")
 class SettingFragment : Fragment(), SettingFragmentView {
 
-    private var settingFragmentMain = SettingFragmentMain()
-    private var settingFragmentUserInformation = SettingFragmentUserInformation()
-    private var fragmentList = ArrayList<Fragment>()
-    private lateinit var fragmentAdapter: MyFragmentAdapter
     var presenter = SettingFragmentPresenter()
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
@@ -47,20 +50,34 @@ class SettingFragment : Fragment(), SettingFragmentView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.mView = this
-        settingFragmentMain.mView = this
-        settingFragmentUserInformation.mView = this
-
-        fragmentList.add(settingFragmentMain)
-        fragmentList.add(settingFragmentUserInformation)
-        fragmentAdapter = MyFragmentAdapter(childFragmentManager, fragmentList)
-
-        mViewPager.adapter = fragmentAdapter
-        mViewPager.currentItem = 0
-        mViewPager.setScroll(false)
-
         initUserInfo()
+        presenter.mView = this
 
+        userInformationLayout.setOnClickListener {}
+
+        userSportHistoryLayout.setOnClickListener {}
+
+        userSettingLayout.setOnClickListener {}
+
+        appInfoLayout.setOnClickListener{}
+
+        logoutButton.setOnClickListener {
+            presenter.logout(user.telephone, token)
+        }
+
+        settingRefreshLayout.setOnMultiPurposeListener(object : SimpleMultiPurposeListener() {
+            override fun onHeaderMoving(header: RefreshHeader?, isDragging: Boolean, percent: Float, offset: Int, headerHeight: Int, maxDragHeight: Int) {
+                super.onHeaderMoving(header, isDragging, percent, offset, headerHeight, maxDragHeight)
+                val radius: Int = max((10 * (1 - percent)).toInt(), 0)
+                if (radius == 0) {
+                    settingBackgroundBlur.visibility = View.INVISIBLE
+                } else {
+                    settingBackgroundBlur.visibility = View.VISIBLE
+                    settingBackgroundBlur.setBlurRadius(radius)
+                }
+            }
+
+        })
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -72,23 +89,26 @@ class SettingFragment : Fragment(), SettingFragmentView {
 
         GlideApp.with(this)
                 .load(MyUtils.getImageUrl(user.telephone))
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.drawable.ic_user_image)
                 .into(userImageView)
 
-        usernameText.text = user.username
+        userNameText.text = user.username
+
         if (user.signature == null) {
-            signatureText.text = "未设置签名"
-            signatureText.typeface = Typeface.defaultFromStyle(Typeface.ITALIC)
+            userSignatureText.typeface = Typeface.defaultFromStyle(Typeface.ITALIC)
+            userSignatureText.text = "未设置签名"
         } else {
-            signatureText.typeface = Typeface.DEFAULT
-            signatureText.text = user.signature
+            userSignatureText.typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
+            userSignatureText.text = user.signature
         }
 
+        if (user.gender == "男") {
+            userGenderView.imageResource = R.drawable.ic_sex_man_checked
+        } else {
+            userGenderView.imageResource = R.drawable.ic_sex_woman_checked
+        }
 
-    }
-
-    override fun logout() {
-        presenter.logout(user.telephone, token)
     }
 
     override fun logoutSuccess() {

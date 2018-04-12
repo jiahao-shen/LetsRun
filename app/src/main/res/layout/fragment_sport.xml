@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.464"
-        app:mpc_default_color="#eeeeee" />
+        app:mpc_default_color="@color/mpc_default_color" />
 
     <TextView
         android:id="@+id/text_1"
@@ -61,11 +61,12 @@
         android:layout_height="100dp"
         android:layout_marginTop="32dp"
         android:src="@drawable/ic_running"
-        app:cb_color="#43e97b"
+        app:cb_color="@color/cb_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@+id/sportProgress"
         app:layout_constraintRight_toRightOf="@+id/sportProgress"
         app:layout_constraintTop_toBottomOf="@+id/sportProgress"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintVertical_bias="0.1"
+        tools:ignore="VectorDrawableCompat" />
 
 </android.support.constraint.ConstraintLayout>
