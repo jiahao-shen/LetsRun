@@ -19,6 +19,7 @@ import com.sam.letsrun.Model.SocketRequest
 import com.sam.letsrun.Model.User
 import com.sam.letsrun.R
 import com.sam.letsrun.Service.FriendService
+import com.sam.letsrun.Service.SportService
 import com.sam.letsrun.View.MainView
 import devlight.io.library.ntb.NavigationTabBar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -53,7 +54,8 @@ class MainActivity : AppCompatActivity(), MainView {
     private lateinit var token: String
     private lateinit var user: User
 
-    private lateinit var friendService: Intent
+    private var friendService: Intent? = null
+    private var sportService: Intent? = null
 
 
     @SuppressLint("CommitPrefEdits", "ApplySharedPref")
@@ -72,6 +74,8 @@ class MainActivity : AppCompatActivity(), MainView {
         friendService = Intent(this, FriendService::class.java)
         startService(friendService)
 
+        sportService = Intent(this, SportService::class.java)
+        startService(sportService)
     }
 
     /**
@@ -144,8 +148,12 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun onDestroy() {
         super.onDestroy()
         ImmersionBar.with(this).destroy()
-        stopService(friendService)
-        if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this)
+
+        friendService.let { stopService(it) }
+        sportService.let { stopService(it) }
+
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this)
     }
 
     override fun addFriendRequest(friend: String, message: String) {

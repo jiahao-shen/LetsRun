@@ -62,19 +62,29 @@ class FriendFragment : Fragment(), FriendFragmentView {
     private lateinit var token: String
 
     private var searchUserDialog: MaterialDialog? = null
-    private var addFriendRequestDialog: MaterialDialog? = null
-    private var addFriendRequestList: ArrayList<AddFriendRequest> = ArrayList()
+    private var friendRequestDialog: MaterialDialog? = null
+    private var friendRequestList: ArrayList<AddFriendRequest> = ArrayList()
+    private lateinit var tempList: ArrayList<AddFriendRequest>
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessage(event: ArrayList<AddFriendRequest>) {
+        friendRequestList = event
+        noticeButton.show(true)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         EventBus.getDefault().register(this)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_friend, container, false)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -110,8 +120,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
         })
 
         noticeButton.setOnClickListener {
-            //监听notice消息按钮
-            showAddFriendRequestDialog()
+            showFriendRequestDialog()
         }
 
         friendRefreshLayout.setOnRefreshListener {
@@ -128,22 +137,6 @@ class FriendFragment : Fragment(), FriendFragmentView {
         token = sharedPreferences.getString("token", "")
         user = Gson().fromJson(sharedPreferences.getString("user", ""), User::class.java)
     }
-
-    override fun addFriendResponseError() {
-        //发送回复失败
-        toast("未知错误,请稍后再试")
-        sharedPreferencesEditor.putString("friendRequestList",
-                sharedPreferences.getString("friendRequestListTemp", "")).commit()   //重新保存
-
-        addFriendRequestList = if (sharedPreferences.getString("friendRequestList", "") == "") {    //更新addFriendRequestList
-            ArrayList()
-        } else {
-            Gson().fromJson<ArrayList<AddFriendRequest>>(
-                    sharedPreferences.getString("friendRequestList", ""),
-                    object : TypeToken<ArrayList<AddFriendRequest>>() {}.type)
-        }
-    }
-
 
     override fun showSearchResult(msg: Int, response: SearchUserResponse?) {        //显示搜索结果
         searchUserDialog = MaterialDialog.Builder(this.context!!)
@@ -237,32 +230,20 @@ class FriendFragment : Fragment(), FriendFragmentView {
         searchUserDialog?.show()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessage(event: ArrayList<AddFriendRequest>) {
-        addFriendRequestList = event
-        noticeButton.show(true)
-    }
-
-    private fun showAddFriendRequestDialog() {  //显示好友申请列表
-
-        addFriendRequestDialog = MaterialDialog.Builder(this.context!!)
+    private fun showFriendRequestDialog() {  //显示好友申请列表
+        friendRequestDialog = MaterialDialog.Builder(this.context!!)
                 .title("好友申请")
                 .titleGravity(GravityEnum.CENTER)
                 .customView(R.layout.dialog_add_friend_request, true)
                 .build()
 
-        val rootView: View = addFriendRequestDialog?.customView!!
+        val rootView: View = friendRequestDialog?.customView!!
         val recyclerView = rootView.findViewById<RecyclerView>(R.id.add_friend_request_list)
         val agreeButton = rootView.findViewById<BootstrapButton>(R.id.agree_button)
         val refuseButton = rootView.findViewById<BootstrapButton>(R.id.refuse_button)
 
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
-        val adapter = AddFriendAdapter(addFriendRequestList)      //初始化适配器
+        val adapter = AddFriendAdapter(friendRequestList)      //初始化适配器
         adapter.emptyView = View.inflate(context, R.layout.dialog_empty_add_friend, null)       //加载空布局
         recyclerView.adapter = adapter      //绑定适配器
 
@@ -276,37 +257,40 @@ class FriendFragment : Fragment(), FriendFragmentView {
             addFriendAnswer(Const.ADD_FRIEND_REFUSE, adapter, recyclerView)
         }
 
-        addFriendRequestDialog!!.show()
+        friendRequestDialog!!.show()
 
-    }
-
-    override fun addFriendSuccess() {
-        toast("添加成功")
     }
 
     private fun addFriendAnswer(msg: Int, adapter: AddFriendAdapter, recyclerView: RecyclerView) {
+        tempList = ArrayList()
+        tempList.addAll(friendRequestList)
 
         val addFriendResponseList = ArrayList<HashMap<String, String>>()
-
-        sharedPreferencesEditor.putString("friendRequestListTemp", Gson().toJson(addFriendRequestList)).commit()    //保存好友申请列表到temp
-
-        Logger.json(Gson().toJson(addFriendRequestList))
-
-        for (i in addFriendRequestList.indices) {
+        for (i in friendRequestList.indices) {
             val checkBox = adapter.getViewByPosition(recyclerView, i, R.id.item_add_friend_request_checkbox) as CheckBox?
             checkBox?.let {
                 if (checkBox.isChecked) {       //如果打了勾
                     //添加到提交对象中去
                     addFriendResponseList.add(hashMapOf("fromTelephone" to adapter.getItem(i)!!.fromTelephone, "toTelephone" to adapter.getItem(i)!!.toTelephone))
                     //同时从本地申请列表中删除
-                    addFriendRequestList.remove(adapter.getItem(i)!!)
+                    friendRequestList.remove(adapter.getItem(i)!!)
                 }
             }
         }
         adapter.notifyDataSetChanged()      //更新界面
-        sharedPreferencesEditor.putString("friendRequestList", Gson().toJson(addFriendRequestList)).commit()   //保存更新后的申请列表
         presenter.addFriendAnswer(user.telephone, token, msg, addFriendResponseList)    //提交申请回答
-        EventBus.getDefault().postSticky(addFriendRequestList)
+        EventBus.getDefault().postSticky(friendRequestList)
+    }
+
+    override fun addFriendSuccess() {
+        toast("添加成功")
+    }
+
+    override fun addFriendError() {
+        //发送回复失败
+        toast("未知错误,请稍后再试")
+        friendRequestList = ArrayList()
+        friendRequestList.addAll(tempList)
     }
 
     override fun loadFriendListError() {

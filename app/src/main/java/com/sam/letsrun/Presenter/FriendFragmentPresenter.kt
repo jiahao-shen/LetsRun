@@ -26,7 +26,7 @@ class FriendFragmentPresenter {
             service.searchUser(Gson().toJson(request))
                     .enqueue(object : Callback<SearchUserResponse> {
                         override fun onFailure(call: Call<SearchUserResponse>?, t: Throwable?) {
-                            mView.addFriendResponseError()
+                            mView.addFriendError()
                         }
 
                         override fun onResponse(call: Call<SearchUserResponse>?, response: Response<SearchUserResponse>) {
@@ -46,7 +46,7 @@ class FriendFragmentPresenter {
         service.addFriendAnswer(Gson().toJson(addFriendAnswer))
                 .enqueue(object : Callback<SocketResponse> {
                     override fun onFailure(call: Call<SocketResponse>?, t: Throwable?) {
-                        mView.addFriendResponseError()
+                        mView.addFriendError()
                     }
 
                     override fun onResponse(call: Call<SocketResponse>?, response: Response<SocketResponse>) {
@@ -54,7 +54,7 @@ class FriendFragmentPresenter {
                         when (addFriendResponse.msg) {
                             Const.ADD_FRIEND_SUCCESS -> mView.addFriendSuccess()
 
-                            Const.UNKNOWN_ERROR -> mView.addFriendResponseError()
+                            Const.UNKNOWN_ERROR -> mView.addFriendError()
 
                         }
                     }

@@ -5,19 +5,21 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:padding="50dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="UseCompoundDrawables">
 
     <ImageView
         android:layout_gravity="center"
         android:src="@drawable/ic_friend_list_empty"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        tools:ignore="VectorDrawableCompat" />
+        tools:ignore="ContentDescription,VectorDrawableCompat" />
 
     <TextView
         android:text="您还没有任何好友"
         android:layout_gravity="center"
         android:textSize="20sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:ignore="HardcodedText" />
 </LinearLayout>

@@ -63,14 +63,6 @@ class FriendService : Service() {
             val request = SocketRequest(Const.SOCKET_LOGIN_CODE, telephone, token, DeviceUtils.getManufacturer())
             webSocket.send(Gson().toJson(request))  //发送登录websocket请求
 
-            val friendRequestList: ArrayList<AddFriendRequest> = if (sharedPreferences.getString("friendRequestList", "") == "") {
-                ArrayList()
-            } else {
-                Gson().fromJson<ArrayList<AddFriendRequest>>(
-                        sharedPreferences.getString("friendRequestList", ""),
-                        object : TypeToken<ArrayList<AddFriendRequest>>() {}.type)
-            }       //获取好友请求列表
-            EventBus.getDefault().postSticky(friendRequestList)       //发送
         }
 
         override fun onFailure(webSocket: WebSocket?, t: Throwable?, response: Response?) {
@@ -87,30 +79,14 @@ class FriendService : Service() {
                 Const.SOCKET_PING_CODE -> { }
 
                 Const.SOCKET_ADD_FRIEND -> {
-                    friendRequestList = if (sharedPreferences.getString("friendRequestList", "") == "") {
-                        ArrayList()
-                    } else {
-                        Gson().fromJson<ArrayList<AddFriendRequest>>(
-                                sharedPreferences.getString("friendRequestList", ""),
-                                object : TypeToken<ArrayList<AddFriendRequest>>() {}.type)
-                    }       //获取好友请求列表
                     friendRequestList.add(Gson().fromJson(Gson().toJson(response.info), AddFriendRequest::class.java))      //往申请列表中添加新的好友申请
-                    sharedPreferencesEditor.putString("friendRequestList", Gson().toJson(friendRequestList)).commit()       //保存在friendRequestList中
                     EventBus.getDefault().postSticky(friendRequestList)       //发送
                 }
 
                 Const.UNKNOWN_ERROR -> { }
 
                 Const.SOCKET_LOGIN_CODE -> {
-                    friendRequestList = if (sharedPreferences.getString("friendRequestList", "") == "") {
-                        ArrayList()
-                    } else {
-                        Gson().fromJson<ArrayList<AddFriendRequest>>(
-                                sharedPreferences.getString("friendRequestList", ""),
-                                object : TypeToken<ArrayList<AddFriendRequest>>() {}.type)
-                    }       //获取含有请求列表
                     friendRequestList.addAll(Gson().fromJson<ArrayList<AddFriendRequest>>(Gson().toJson(response.info), object : TypeToken<ArrayList<AddFriendRequest>>() {}.type))
-                    sharedPreferencesEditor.putString("friendRequestList", Gson().toJson(friendRequestList)).commit()
                     EventBus.getDefault().postSticky(friendRequestList)
                 }
             }

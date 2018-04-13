@@ -29,7 +29,6 @@ class NewsAdapter(data: ArrayList<News>) : BaseMultiItemQuickAdapter<News, BaseV
                         .into(helper.getView(R.id.newsImageView))
             }
             News.MULTI -> {
-                Logger.json(Gson().toJson(item))
                 helper.setText(R.id.newsTitle, item.title)
                         .setText(R.id.newsDate, item.date)
                         .setText(R.id.newsAuthor, item.author_name)
