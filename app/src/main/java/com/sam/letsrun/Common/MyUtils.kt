@@ -13,7 +13,6 @@ object MyUtils {
     /**
      * 生成md5码
      * @param text(原字符串)
-     * @return md5(生成的md5字符串)
      */
     fun md5(text: String): String {
         val instance: MessageDigest = MessageDigest.getInstance("MD5")
@@ -32,7 +31,6 @@ object MyUtils {
      * 图片压缩并保存
      * @param bitmap(图片)
      * @param name(图片名称
-     * @param context(环境)
      */
     fun saveImageView(bitmap: Bitmap, name: String) {
         val file = File(Const.LOCAL_PATH, "$name.jpg")

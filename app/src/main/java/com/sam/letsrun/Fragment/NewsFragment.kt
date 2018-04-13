@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_news.*
 import org.jetbrains.anko.support.v4.toast
 
 /**
- * 新闻fragment
+ * 新闻Fragment
  */
 class NewsFragment : Fragment(), NewsFragmentView {
 
@@ -35,7 +35,7 @@ class NewsFragment : Fragment(), NewsFragmentView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.mView = this
-//        presenter.loadNews()
+        presenter.loadNews()
 
         newsRefreshLayout.setOnRefreshListener {
             presenter.loadNews()

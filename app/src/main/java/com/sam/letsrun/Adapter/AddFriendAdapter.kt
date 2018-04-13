@@ -10,7 +10,7 @@ import com.sam.letsrun.Model.AddFriendRequest
 import com.sam.letsrun.R
 
 /**
- * Created by sam on 2018/4/2.
+ * 添加好友适配器
  */
 class AddFriendAdapter(data: ArrayList<AddFriendRequest>) :
         BaseQuickAdapter<AddFriendRequest, BaseViewHolder>(R.layout.item_add_friend_request, data) {

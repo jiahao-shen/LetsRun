@@ -18,12 +18,12 @@ import org.jetbrains.anko.startActivity
 
 
 /**
- * 广告界面
+ * 广告
  * APP每次打开时加载本地token和telephone
  * 上传telephone和token并判断是跳转登录界面还是主界面
+ * TODO("给广告界面添加加载动画")
  */
 class AdvertisementActivity : AppCompatActivity(), AdvertisementView {
-
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
@@ -31,31 +31,24 @@ class AdvertisementActivity : AppCompatActivity(), AdvertisementView {
     private lateinit var user: User
     private lateinit var token: String
 
-    @SuppressLint("CommitPrefEdits", "ApplySharedPref")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_advertisement)
-        Logger.addLogAdapter(AndroidLogAdapter())
-
-        sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
-        sharedPreferencesEditor = sharedPreferences.edit()
-        sharedPreferencesEditor.putString("friendRequestList", "").commit()
-
-        presenter.mView = this
-
-        initInformation()
-
+        Logger.addLogAdapter(AndroidLogAdapter())   //Logger初始化
+        initUser()
+        presenter.mView = this      //view一定不要忘记初始化
     }
 
-    /**
-     * 初始化信息
-     */
-    private fun initInformation() {
+
+    @SuppressLint("CommitPrefEdits")
+    private fun initUser() {
+        sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+        sharedPreferencesEditor = sharedPreferences.edit()
         token = sharedPreferences.getString("token", "")
 
-        if (token == "") {
+        if (token == "") {      //token不存在
             loadFailed()
-        } else {
+        } else {        //token存在则获取user对象
             user = Gson().fromJson(sharedPreferences.getString("user", ""), User::class.java)
             presenter.loadInformation(user.telephone, token)
         }
@@ -68,8 +61,7 @@ class AdvertisementActivity : AppCompatActivity(), AdvertisementView {
     override fun loadFailed() {
         Logger.e("loadFailed")
         progressBar.visibility = View.GONE
-        //跳转到登录界面
-        startActivity<LoginActivity>()
+        startActivity<LoginActivity>()  //跳转到登录界面
     }
 
     /**
@@ -79,10 +71,8 @@ class AdvertisementActivity : AppCompatActivity(), AdvertisementView {
     override fun loadSuccess(user: User) {
         progressBar.visibility = View.GONE
         Logger.json(Gson().toJson(user))
-        //本地保存user信息
-        sharedPreferencesEditor.putString("user", Gson().toJson(user)).commit()
-        //跳转到主界面
-        startActivity<MainActivity>()
+        sharedPreferencesEditor.putString("user", Gson().toJson(user)).commit()     //保存新的user信息到本地
+        startActivity<MainActivity>()   //跳转到主界面
     }
 
 }

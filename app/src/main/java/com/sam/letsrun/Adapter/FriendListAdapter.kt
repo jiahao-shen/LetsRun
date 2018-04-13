@@ -9,7 +9,7 @@ import com.sam.letsrun.Model.Friend
 import com.sam.letsrun.R
 
 /**
- * Created by sam on 2018/4/9.
+ * 好友列表适配器
  */
 class FriendListAdapter(data: ArrayList<Friend>) : BaseQuickAdapter<Friend, BaseViewHolder>(R.layout.item_friend_list, data) {
 

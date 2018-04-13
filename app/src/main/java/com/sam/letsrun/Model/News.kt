@@ -3,7 +3,7 @@ package com.sam.letsrun.Model
 import com.chad.library.adapter.base.entity.MultiItemEntity
 
 /**
- * Created by sam on 2018/4/10.
+ * 新闻类
  */
 data class News(var type: Int = 0,
                 val uniquekey: String,

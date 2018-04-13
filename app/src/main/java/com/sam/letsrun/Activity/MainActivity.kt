@@ -30,47 +30,40 @@ import org.greenrobot.eventbus.ThreadMode
 
 /**
  * 主界面
+ * TODO("完善所有Fragment")
  */
 class MainActivity : AppCompatActivity(), MainView {
 
     /**
      * 5个fragment
-     * 运动,音乐,咨询,好友,设置
+     * 新闻,音乐,运动,好友,设置
      */
-    private var sportFragment = SportFragment()
     private var musicFragment = MusicFragment()
     private var newsFragment = NewsFragment()
+    private var sportFragment = SportFragment()
     private var friendFragment = FriendFragment()
     private var settingFragment = SettingFragment()
-    private var fragmentList = ArrayList<Fragment>()
-    private lateinit var fragmentAdapter: MyFragmentAdapter
+    private var fragmentList = ArrayList<Fragment>()        //存储Fragment
+    private lateinit var fragmentAdapter: MyFragmentAdapter     //Fragment适配器
 
-    /**
-     * sharedPreferences
-     */
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
 
     private lateinit var token: String
     private lateinit var user: User
 
-    private var friendService: Intent? = null
-    private var sportService: Intent? = null
+    private var friendService: Intent? = null       //监听好友添加等
+    private var sportService: Intent? = null        //定位和计步服务
 
-
-    @SuppressLint("CommitPrefEdits", "ApplySharedPref")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        EventBus.getDefault().register(this)
+        EventBus.getDefault().register(this)        //EventBus注册
 
-        sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
-        sharedPreferencesEditor = sharedPreferences.edit()
-        token = sharedPreferences.getString("token", "")
-        user = Gson().fromJson(sharedPreferences.getString("user", ""), User::class.java)
-
+        initUser()
         initBottomNavigation()
 
+        /*--绑定服务--*/
         friendService = Intent(this, FriendService::class.java)
         startService(friendService)
 
@@ -78,13 +71,19 @@ class MainActivity : AppCompatActivity(), MainView {
         startService(sportService)
     }
 
+    @SuppressLint("CommitPrefEdits")
+    private fun initUser() {
+        sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+        sharedPreferencesEditor = sharedPreferences.edit()
+        token = sharedPreferences.getString("token", "")
+        user = Gson().fromJson(sharedPreferences.getString("user", ""), User::class.java)
+    }
+
     /**
      * 初始化底部导航栏
      */
     private fun initBottomNavigation() {
-
-        //初始化状态栏,导航栏的状态
-        ImmersionBar.with(this)
+        ImmersionBar.with(this)     //沉浸式导航栏初始化
                 .navigationBarEnable(true)
                 .supportActionBar(false)
                 .statusBarAlpha(0.3f)
@@ -100,10 +99,8 @@ class MainActivity : AppCompatActivity(), MainView {
 
         fragmentAdapter = MyFragmentAdapter(supportFragmentManager, fragmentList)
         mViewPager.adapter = fragmentAdapter
-        //fragment缓存数
-        mViewPager.offscreenPageLimit = 4
-        //fragment禁止手势滑动
-        mViewPager.setScroll(false)
+        mViewPager.offscreenPageLimit = 4   //fragment缓存数
+        mViewPager.setScroll(false)     //禁止手势滑动
 
         val models = ArrayList<NavigationTabBar.Model>()
 
@@ -118,7 +115,6 @@ class MainActivity : AppCompatActivity(), MainView {
                 Color.parseColor("#eeeeee")
         ).title("音乐")
                 .build())
-
 
         models.add(NavigationTabBar.Model.Builder(
                 ContextCompat.getDrawable(this, R.drawable.ic_navigation_sport),
@@ -140,11 +136,14 @@ class MainActivity : AppCompatActivity(), MainView {
         )
 
         bottomNavigation.models = models
-        //设置首页
-        bottomNavigation.setViewPager(mViewPager, 4)
+        bottomNavigation.setViewPager(mViewPager, 4)        //设置首页
 
     }
 
+    /**
+     * 切忌一定要释放内存
+     * 该注销的东西通通注销掉
+     */
     override fun onDestroy() {
         super.onDestroy()
         ImmersionBar.with(this).destroy()
@@ -156,6 +155,11 @@ class MainActivity : AppCompatActivity(), MainView {
             EventBus.getDefault().unregister(this)
     }
 
+    /**
+     * 添加好友
+     * @param friend
+     * @param message
+     */
     override fun addFriendRequest(friend: String, message: String) {
         val socketRequest = SocketRequest(Const.SOCKET_ADD_FRIEND,
                 user.telephone,
@@ -165,6 +169,9 @@ class MainActivity : AppCompatActivity(), MainView {
         EventBus.getDefault().postSticky(socketRequest)
     }
 
+    /**
+     * 根据好友添加请求动态更新底部导航栏的红点
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessage(event: ArrayList<AddFriendRequest>) {
         if (event.size == 0) {

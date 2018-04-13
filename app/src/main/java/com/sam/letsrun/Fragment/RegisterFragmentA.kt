@@ -35,16 +35,12 @@ class RegisterFragmentA : Fragment(), RegisterFragmentView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initMessage()
-
         presenter.mView = this
-
         messageButton.setOnClickListener {
             val telephone = telephoneText.text.toString()
             presenter.sendMessage(telephone)
         }
-
         nextButton.setOnClickListener {
             val telephone = telephoneText.text.toString()
             val code = codeText.text.toString()
@@ -59,10 +55,7 @@ class RegisterFragmentA : Fragment(), RegisterFragmentView {
         messageButton.isEnabled = false
         messageButton.bootstrapBrand = DefaultBootstrapBrand.INFO
         val count = 30
-        /**
-         * observable实现的30秒倒计时
-         */
-        Observable.interval(1, TimeUnit.SECONDS)
+        Observable.interval(1, TimeUnit.SECONDS)        //短信发送按钮倒计时
                 .take(count + 1)
                 .map{ aLong ->
                     count - aLong

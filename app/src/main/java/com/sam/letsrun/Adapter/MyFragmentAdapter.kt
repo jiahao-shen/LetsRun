@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 
 /**
- * 自定义fragment适配器
+ * Fragment适配器
  */
 class MyFragmentAdapter(fm: FragmentManager, fragments: List<Fragment>) : FragmentPagerAdapter(fm){
 

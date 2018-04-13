@@ -47,10 +47,13 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.toast
 
+/**
+ * 好友Fragment
+ * TODO("增加首字母分组功能")
+ */
 class FriendFragment : Fragment(), FriendFragmentView {
 
-
-    private var searchQuery: String = ""
+    private var searchQuery: String = ""    //查询对象
 
     private var presenter = FriendFragmentPresenter()
     lateinit var mView: MainView
@@ -61,10 +64,10 @@ class FriendFragment : Fragment(), FriendFragmentView {
     private lateinit var user: User
     private lateinit var token: String
 
-    private lateinit var searchUserDialog: MaterialDialog
-    private lateinit var friendRequestDialog: MaterialDialog
-    private var friendRequestList: ArrayList<AddFriendRequest> = ArrayList()
-    private lateinit var tempList: ArrayList<AddFriendRequest>
+    private lateinit var searchUserDialog: MaterialDialog   //查询对话框
+    private lateinit var friendRequestDialog: MaterialDialog    //好友申请对话框
+    private var friendRequestList: ArrayList<AddFriendRequest> = ArrayList()    //好友申请列表
+    private lateinit var tempList: ArrayList<AddFriendRequest>      //缓存列表
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessage(event: ArrayList<AddFriendRequest>) {
@@ -172,9 +175,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
                         .into(searchImagView)
 
                 searchUserName.text = user.username
-
                 searchAddInfo.visibility = View.GONE
-
                 searchAddUserButton.text = "您不能添加自己"
                 searchAddUserButton.bootstrapBrand = DefaultBootstrapBrand.REGULAR
                 searchAddUserButton.isClickable = false
@@ -182,11 +183,8 @@ class FriendFragment : Fragment(), FriendFragmentView {
 
             Const.USER_NOT_EXIST -> {       //搜索的用户不存在
                 searchImagView.setImageResource(R.drawable.ic_user_image)
-
                 searchUserName.text = "???"
-
                 searchAddInfo.visibility = View.GONE
-
                 searchAddUserButton.text = "用户不存在"
                 searchAddUserButton.bootstrapBrand = DefaultBootstrapBrand.REGULAR
                 searchAddUserButton.isClickable = false
@@ -198,11 +196,8 @@ class FriendFragment : Fragment(), FriendFragmentView {
                         .placeholder(R.drawable.ic_user_image)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(searchImagView)
-
                 searchUserName.text = response.username
-
                 searchAddInfo.visibility = View.GONE
-
                 searchAddUserButton.visibility = View.VISIBLE
                 searchAddUserButton.text = "已经是好友"
                 searchAddUserButton.bootstrapBrand = DefaultBootstrapBrand.SUCCESS
@@ -215,11 +210,8 @@ class FriendFragment : Fragment(), FriendFragmentView {
                         .placeholder(R.drawable.ic_user_image)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(searchImagView)
-
                 searchUserName.text = response.username
-
                 searchAddInfo.visibility = View.VISIBLE
-
                 searchAddUserButton.visibility = View.VISIBLE
                 searchAddUserButton.text = "添加好友"
                 searchAddUserButton.bootstrapBrand = DefaultBootstrapBrand.DANGER
@@ -236,35 +228,26 @@ class FriendFragment : Fragment(), FriendFragmentView {
                 .titleGravity(GravityEnum.CENTER)
                 .customView(R.layout.dialog_add_friend_request, true)
                 .build()
-
         val rootView: View = friendRequestDialog.customView!!
         val recyclerView: RecyclerView = rootView.findViewById(R.id.add_friend_request_list)
         val agreeButton: BootstrapButton = rootView.findViewById(R.id.agree_button)
         val refuseButton: BootstrapButton = rootView.findViewById(R.id.refuse_button)
-
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
         val adapter = AddFriendAdapter(friendRequestList)      //初始化适配器
         adapter.emptyView = View.inflate(context, R.layout.dialog_empty_add_friend, null)       //加载空布局
         recyclerView.adapter = adapter      //绑定适配器
-
-        agreeButton.setOnClickListener {
-            //同意按钮
+        agreeButton.setOnClickListener {        //同意按钮
             addFriendAnswer(Const.ADD_FRIEND_AGREE, adapter, recyclerView)
         }
-
-        refuseButton.setOnClickListener {
-            //拒绝按钮
+        refuseButton.setOnClickListener {       //拒绝按钮
             addFriendAnswer(Const.ADD_FRIEND_REFUSE, adapter, recyclerView)
         }
-
         friendRequestDialog.show()
-
     }
 
-    private fun addFriendAnswer(msg: Int, adapter: AddFriendAdapter, recyclerView: RecyclerView) {
+    private fun addFriendAnswer(msg: Int, adapter: AddFriendAdapter, recyclerView: RecyclerView) {      //好友申请回复
         tempList = ArrayList()
-        tempList.addAll(friendRequestList)
-
+        tempList.addAll(friendRequestList)      //暂时保存到temp中
         val addFriendResponseList = ArrayList<HashMap<String, String>>()
         for (i in friendRequestList.indices) {
             val checkBox = adapter.getViewByPosition(recyclerView, i, R.id.item_add_friend_request_checkbox) as CheckBox?
@@ -286,11 +269,10 @@ class FriendFragment : Fragment(), FriendFragmentView {
         toast("添加成功")
     }
 
-    override fun addFriendError() {
-        //发送回复失败
+    override fun addFriendError() {     //好友申请回复失败
         toast("未知错误,请稍后再试")
         friendRequestList = ArrayList()
-        friendRequestList.addAll(tempList)
+        friendRequestList.addAll(tempList)      //如果失败从temp中重新取出
     }
 
     override fun loadFriendListError() {
@@ -298,12 +280,12 @@ class FriendFragment : Fragment(), FriendFragmentView {
         friendRefreshLayout.finishRefresh(false)
     }
 
-    override fun loadFriendListSuccess(list: ArrayList<Friend>) {
+    override fun loadFriendListSuccess(list: ArrayList<Friend>) {       //加载好友列表
         friendRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val adapter = FriendListAdapter(list)
         adapter.emptyView = View.inflate(context, R.layout.friend_list_empty, null)
         friendRecyclerView.adapter = adapter
-        val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)     //分割线
         decoration.setDrawable(ContextCompat.getDrawable(this.context!!, R.drawable.friend_list_decoration)!!)
         friendRecyclerView.addItemDecoration(decoration)
         friendRefreshLayout.finishRefresh(true)

@@ -10,7 +10,7 @@ import com.sam.letsrun.R
 
 
 /**
- * 音乐fragment
+ * 音乐Fragment
  */
 class MusicFragment : Fragment() {
 

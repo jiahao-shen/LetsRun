@@ -19,10 +19,9 @@ import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
-
-
 /**
- * 登录界面
+ * 登录
+ * TODO("添加背景")
  */
 class LoginActivity : AppCompatActivity(), LoginView {
 
@@ -34,24 +33,22 @@ class LoginActivity : AppCompatActivity(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        Utils.init(application)
+        Utils.init(application)     //工具类初始化
 
-        presenter.mView = this
+        presenter.mView = this      //view一定不要忘记初始化
 
         initPermission()
         sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
         sharedPreferencesEditor = sharedPreferences.edit()
 
         loginButton.setOnClickListener {
-            //获取文本框中的手机和密码
-            val telephone = telephoneText.text.toString()
-            val password = passwordText.text.toString()
-            presenter.login(telephone, password)
+            val telephone = telephoneText.text.toString()       //获取手机
+            val password = passwordText.text.toString()     //获取密码
+            presenter.login(telephone, password)        //登录
         }
 
         registerButton.setOnClickListener {
-            //跳转至注册界面
-            startActivity<RegisterActivity>()
+            startActivity<RegisterActivity>()            //跳转至注册界面
         }
 
     }
@@ -75,14 +72,10 @@ class LoginActivity : AppCompatActivity(), LoginView {
      */
     override fun loginSuccess(loginResponse: LoginResponse) {
         toast("登录成功")
-
-        Logger.json(Gson().toJson(loginResponse))
-        //保存token和user信息
-        sharedPreferencesEditor.putString("token", loginResponse.token)
+        sharedPreferencesEditor.putString("token", loginResponse.token)             //保存token和user信息
                 .putString("user", Gson().toJson(loginResponse.user))
                 .commit()
-
-        startActivity<MainActivity>()
+        startActivity<MainActivity>()       //跳转至主界面
     }
 
     override fun loginFailed() {

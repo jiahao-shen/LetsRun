@@ -9,7 +9,8 @@ import com.sam.letsrun.Model.News
 import com.sam.letsrun.R
 
 /**
- * Created by sam on 2018/4/10.
+ * 新闻适配器
+ * 多布局
  */
 class NewsAdapter(data: ArrayList<News>) : BaseMultiItemQuickAdapter<News, BaseViewHolder>(data) {
     init {

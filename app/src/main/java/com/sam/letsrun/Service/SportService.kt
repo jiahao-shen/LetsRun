@@ -24,6 +24,11 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.util.*
 
+/**
+ * 定位和计步服务
+ * TODO("添加判断运动状态功能")
+ * 必须强调!!!!!!!这个计步算法不是我写的!!!!不是我写的!!!!
+ */
 class SportService : Service(), AMapLocationListener, SensorEventListener, WeatherSearch.OnWeatherSearchListener {
 
     /**
@@ -97,7 +102,7 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
         mLocationClient = AMapLocationClient(this)
         mLocationOption = AMapLocationClientOption()
         mLocationOption.locationPurpose = AMapLocationClientOption.AMapLocationPurpose.Sport
-        mLocationOption.interval = 2000
+        mLocationOption.interval = 30000
         mLocationClient.setLocationOption(mLocationOption)
         mLocationClient.setLocationListener(this)
         mLocationClient.startLocation()
@@ -111,6 +116,10 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
         }
     }
 
+    /**
+     * 好了,从下往下的算法跟我一点关系都没有
+     * TODO("这个算法不是我写的!!!!争取自己看懂")
+     */
     private fun initStep() {
         sManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager    //传感器管理器
         val mSensorAccelerometer = sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)

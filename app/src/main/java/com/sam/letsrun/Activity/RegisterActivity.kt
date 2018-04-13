@@ -30,7 +30,8 @@ import org.jetbrains.anko.toast
 import java.io.File
 
 /**
- * 注册界面
+ * 注册
+ * TODO("给所有Fragment添加背景")
  */
 class RegisterActivity : AppCompatActivity(), RegisterView {
 
@@ -55,7 +56,7 @@ class RegisterActivity : AppCompatActivity(), RegisterView {
     var presenter = RegisterPresenter()
 
     /**
-     * 手机号,密码,用户头像,用户名,缓存图片路径,性别,生日,血型,身高,体重
+     * 用户信息
      */
     private lateinit var telephone: String
     private lateinit var password: String
@@ -115,12 +116,10 @@ class RegisterActivity : AppCompatActivity(), RegisterView {
      */
     override fun nextFragment() {
         if (mViewPager.currentItem == fragmentList.size - 1) {
-            //fragment到达最后一页,直接调用
-            presenter.register(telephone, password, userName, gender, birthday, blood, height, weight)
+            presenter.register(telephone, password, userName, gender, birthday, blood, height, weight)  //fragment到达最后一页,直接调用
         } else {
-            //否则fragment前进1同时更新底部的radiobutton
             mViewPager.currentItem++
-            (regRadioGroup.getChildAt(mViewPager.currentItem) as RadioButton).isChecked = true
+            (regRadioGroup.getChildAt(mViewPager.currentItem) as RadioButton).isChecked = true  //否则fragment前进1同时更新底部的radiobutton
         }
     }
 
@@ -130,25 +129,19 @@ class RegisterActivity : AppCompatActivity(), RegisterView {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            //相册选择回调
-            Const.SELECT_IMAGE_ALBUM -> {
+            Const.SELECT_IMAGE_ALBUM -> {   //相册选择回调
                 if (resultCode == RESULT_OK) {
-                    //跳转至剪裁
-                    data?.data?.let { presenter.cropImage(this, it) }
+                    data?.data?.let { presenter.cropImage(this, it) }   //跳转至剪裁
                 }
             }
-            //拍照回调
-            Const.SELECT_IMAGE_PHOTO -> {
+            Const.SELECT_IMAGE_PHOTO -> {   //拍照回调
                 if (resultCode == RESULT_OK) {
-                    //跳转至剪裁
-                    presenter.cropImage(this, tempUri)
+                    presenter.cropImage(this, tempUri)  //跳转至剪裁
                 }
             }
-            //剪裁回调
-            UCrop.REQUEST_CROP -> {
+            UCrop.REQUEST_CROP -> {     //剪裁回调
                 if (resultCode == RESULT_OK) {
-                    //设置用户头像
-                    UCrop.getOutput(data!!)?.let {
+                    UCrop.getOutput(data!!)?.let {      //设置用户头像
                         fragmentC.setUserImage(it)
                         MyUtils.saveImageView((fragmentC.userImageView.drawable as BitmapDrawable).bitmap, telephone)
                     }
@@ -158,16 +151,19 @@ class RegisterActivity : AppCompatActivity(), RegisterView {
     }
 
 
-    //拍照
+    /**
+     * 拍照
+     */
     override fun selectImageCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        //拍照图片的临时存储路径
-        tempUri = FileProvider.getUriForFile(this, "com.sam.letsrun", File(cacheDir, "${System.currentTimeMillis()}.jpg"))
+        tempUri = FileProvider.getUriForFile(this, "com.sam.letsrun", File(cacheDir, "${System.currentTimeMillis()}.jpg"))  //拍照图片的临时存储路径
         intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri)
         startActivityForResult(intent, Const.SELECT_IMAGE_PHOTO)
     }
 
-    //相册选择图片
+    /**
+     * 从相册选择图片
+     */
     override fun selectImageAlbum() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
@@ -216,16 +212,11 @@ class RegisterActivity : AppCompatActivity(), RegisterView {
      */
     override fun registerSuccess(token: String) {
         toast("注册成功")
-
         val user = User(telephone, null, userName, null, null, birthday, gender, blood, height, weight)
-
-        //保存token和用户信息
-        sharedPreferencesEditor.putString("token", token)
+        sharedPreferencesEditor.putString("token", token)   //保存token和用户信息
                 .putString("user", Gson().toJson(user))
                 .commit()
-
-        //跳转至主界面
-        startActivity<MainActivity>()
+        startActivity<MainActivity>()   //跳转至主界面
     }
 
     override fun netError() {

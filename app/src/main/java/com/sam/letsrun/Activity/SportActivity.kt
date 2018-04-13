@@ -2,6 +2,7 @@ package com.sam.letsrun.Activity
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -28,26 +29,29 @@ import kotlinx.android.synthetic.main.map_view_layout.*
 import kotlin.math.sqrt
 
 /**
- * 运动界面
+ * 运动
+ * TODO("还没有把实时的定位信息更新到界面上")
+ * TODO("开始,结束和暂停按钮")
  */
 class SportActivity : AppCompatActivity() {
 
-    //动画起始座标x,y
+    /**
+     * 动画起始座标x,y
+     */
     private var animationX = 0
     private var animationY = 0
-    //动画半径r
-    private var animationRadius = 0.0
-    //控制地图对象
-    private lateinit var aMap: AMap
-    //定位参数
-    private var myLocationStyle: MyLocationStyle = MyLocationStyle()
-    //当前座标
-    private lateinit var currentLocation: LatLng
+    private var animationRadius = 0.0    //动画半径r
+    private lateinit var aMap: AMap     //控制地图对象
+    private var myLocationStyle: MyLocationStyle = MyLocationStyle()    //定位参数
+    private lateinit var currentLocation: LatLng    //当前座标
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sport)
+        mMapView.onCreate(savedInstanceState)
+        Utils.init(this)
 
         ImmersionBar.with(this)
                 .statusBarAlpha(0.3f)
@@ -55,9 +59,7 @@ class SportActivity : AppCompatActivity() {
                 .navigationBarEnable(true)
                 .init()
 
-        mMapView.onCreate(savedInstanceState)
 
-        Utils.init(this)
         initPermission()
         initMapView()
 
@@ -118,13 +120,10 @@ class SportActivity : AppCompatActivity() {
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun showMapView() {
-
         val height = ScreenUtils.getScreenHeight()
         val width = ScreenUtils.getScreenWidth()
         val radius = sqrt((height * height + width * width).toDouble())
-
         animationRadius = radius
-
         val animation = ViewAnimationUtils.createCircularReveal(mapViewLayout, animationX, animationY, 0f, radius.toFloat())
         animation.interpolator = DecelerateInterpolator()
         animation.duration = 1000

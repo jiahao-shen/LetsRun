@@ -11,14 +11,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Spinner
 import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
 import com.blankj.utilcode.util.KeyboardUtils
 import com.suke.widget.SwitchButton
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
-import com.jaredrummler.materialspinner.MaterialSpinner
 import com.rengwuxian.materialedittext.MaterialEditText
 import com.sam.letsrun.Activity.LoginActivity
 import com.sam.letsrun.Common.MyUtils
@@ -35,7 +33,7 @@ import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.toast
 import kotlin.math.max
 /**
- * 设置fragment
+ * 设置Fragment
  */
 
 @Suppress("UNREACHABLE_CODE")
@@ -47,7 +45,6 @@ class SettingFragment : Fragment(), SettingFragmentView {
     private lateinit var token: String
     private lateinit var user: User
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_setting, container, false)
     }
@@ -55,25 +52,30 @@ class SettingFragment : Fragment(), SettingFragmentView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initUserInfo()
+        initUser()
         presenter.mView = this
 
-        userInformationLayout.setOnClickListener {}
+        userInformationLayout.setOnClickListener {
+            TODO("修改用户信息")
+        }
 
-        userSportHistoryLayout.setOnClickListener {}
+        userSportHistoryLayout.setOnClickListener {
+            TODO("展示运动历史记录")
+        }
 
-        userSettingLayout.setOnClickListener {
+        userSettingLayout.setOnClickListener {      //设置
+            TODO("添加设置栏目")
             val settingDialog = MaterialDialog.Builder(context!!)
                     .title("设置")
                     .titleGravity(GravityEnum.CENTER)
                     .customView(R.layout.dialog_setting, true)
                     .positiveText("保存")
                     .onPositive { dialog, which ->
-
+                        TODO("保存事件")
                     }
                     .negativeText("取消")
                     .onNegative { dialog, which ->
-
+                        TODO("取消事件")
                     }
                     .build()
 
@@ -81,7 +83,7 @@ class SettingFragment : Fragment(), SettingFragmentView {
             val shareMyLocationButton: SwitchButton = rootView.findViewById(R.id.share_mylocation_button)
             shareMyLocationButton.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    //TODO
+                    TODO("")
                 }
             }
             val goalStepText: MaterialEditText = rootView.findViewById(R.id.goal_step_text)
@@ -101,11 +103,11 @@ class SettingFragment : Fragment(), SettingFragmentView {
 
         appInfoLayout.setOnClickListener{}
 
-        logoutButton.setOnClickListener {
+        logoutButton.setOnClickListener {       //退出登录
             presenter.logout(user.telephone, token)
         }
 
-        settingRefreshLayout.setOnMultiPurposeListener(object : SimpleMultiPurposeListener() {
+        settingRefreshLayout.setOnMultiPurposeListener(object : SimpleMultiPurposeListener() {      //根据滑动的距离会改变模糊度
             override fun onHeaderMoving(header: RefreshHeader?, isDragging: Boolean, percent: Float, offset: Int, headerHeight: Int, maxDragHeight: Int) {
                 super.onHeaderMoving(header, isDragging, percent, offset, headerHeight, maxDragHeight)
                 val radius: Int = max((10 * (1 - percent)).toInt(), 0)
@@ -121,7 +123,7 @@ class SettingFragment : Fragment(), SettingFragmentView {
     }
 
     @SuppressLint("CommitPrefEdits")
-    private fun initUserInfo() {
+    private fun initUser() {
         sharedPreferences = activity!!.getSharedPreferences(activity!!.packageName, Context.MODE_PRIVATE)
         sharedPreferencesEditor = sharedPreferences.edit()
         token = sharedPreferences.getString("token", "")
@@ -168,9 +170,4 @@ class SettingFragment : Fragment(), SettingFragmentView {
     }
 
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser) {
-        }
-    }
 }// Required empty public constructor
