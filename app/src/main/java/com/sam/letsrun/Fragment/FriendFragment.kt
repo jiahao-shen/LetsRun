@@ -61,8 +61,8 @@ class FriendFragment : Fragment(), FriendFragmentView {
     private lateinit var user: User
     private lateinit var token: String
 
-    private var searchUserDialog: MaterialDialog? = null
-    private var friendRequestDialog: MaterialDialog? = null
+    private lateinit var searchUserDialog: MaterialDialog
+    private lateinit var friendRequestDialog: MaterialDialog
     private var friendRequestList: ArrayList<AddFriendRequest> = ArrayList()
     private lateinit var tempList: ArrayList<AddFriendRequest>
 
@@ -145,7 +145,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
                 .titleGravity(GravityEnum.CENTER)
                 .build()
 
-        val rootView: View = searchUserDialog?.customView!!     //获取子布局控件
+        val rootView: View = searchUserDialog.customView!!     //获取子布局控件
 
         val searchImagView: CircleImageView = rootView.findViewById(R.id.search_image_view)
         val searchUserName: TextView = rootView.findViewById(R.id.search_user_name)
@@ -157,7 +157,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
             if (searchAddInfo.isCharactersCountValid) {
                 mView.addFriendRequest(searchQuery, searchAddInfo.text.toString())
                 toast("已发送好友请求")
-                searchUserDialog?.cancel()
+                searchUserDialog.cancel()
             } else {
                 toast("验证消息过长")
             }
@@ -227,7 +227,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
             }
         }
 
-        searchUserDialog?.show()
+        searchUserDialog.show()
     }
 
     private fun showFriendRequestDialog() {  //显示好友申请列表
@@ -237,10 +237,10 @@ class FriendFragment : Fragment(), FriendFragmentView {
                 .customView(R.layout.dialog_add_friend_request, true)
                 .build()
 
-        val rootView: View = friendRequestDialog?.customView!!
-        val recyclerView = rootView.findViewById<RecyclerView>(R.id.add_friend_request_list)
-        val agreeButton = rootView.findViewById<BootstrapButton>(R.id.agree_button)
-        val refuseButton = rootView.findViewById<BootstrapButton>(R.id.refuse_button)
+        val rootView: View = friendRequestDialog.customView!!
+        val recyclerView: RecyclerView = rootView.findViewById(R.id.add_friend_request_list)
+        val agreeButton: BootstrapButton = rootView.findViewById(R.id.agree_button)
+        val refuseButton: BootstrapButton = rootView.findViewById(R.id.refuse_button)
 
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
         val adapter = AddFriendAdapter(friendRequestList)      //初始化适配器
@@ -257,7 +257,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
             addFriendAnswer(Const.ADD_FRIEND_REFUSE, adapter, recyclerView)
         }
 
-        friendRequestDialog!!.show()
+        friendRequestDialog.show()
 
     }
 

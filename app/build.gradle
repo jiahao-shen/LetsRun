@@ -97,6 +97,8 @@ dependencies {
     implementation 'com.wonderkiln:blurkit:1.0.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation 'com.sackcentury:shinebutton:0.2.0'
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+    implementation 'com.jaredrummler:material-spinner:1.2.5'
 }
 MobSDK {
     appKey "249896de5b5ac"

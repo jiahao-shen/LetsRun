@@ -5,6 +5,53 @@
     android:layout_height="match_parent"
     tools:context="com.sam.letsrun.Fragment.SportFragment">
 
+    <ImageView
+        android:id="@+id/sportActionBar"
+        android:src="@color/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="120dp" />
+
+    <ImageView
+        android:id="@+id/weatherImageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/sportActionBar"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
+        tools:ignore="VectorDrawableCompat" />
+
+    <TextView
+        android:id="@+id/cityTextView"
+        app:layout_constraintLeft_toRightOf="@+id/weatherImageView"
+        app:layout_constraintTop_toTopOf="@+id/weatherImageView"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/weatherInfoTextView1"
+        app:layout_constraintLeft_toRightOf="@+id/cityTextView"
+        app:layout_constraintTop_toTopOf="@+id/cityTextView"
+        app:layout_constraintBottom_toBottomOf="@+id/cityTextView"
+        android:textSize="15sp"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/weatherInfoTextView2"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintLeft_toRightOf="@+id/weatherImageView"
+        app:layout_constraintBottom_toBottomOf="@+id/weatherImageView"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <com.liulishuo.magicprogresswidget.MagicProgressCircle
         android:id="@+id/sportProgress"
         android:layout_width="250dp"

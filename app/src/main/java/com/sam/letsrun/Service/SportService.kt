@@ -1,8 +1,10 @@
 package com.sam.letsrun.Service
 
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -12,15 +14,25 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
+import com.amap.api.services.weather.LocalWeatherForecastResult
+import com.amap.api.services.weather.LocalWeatherLiveResult
+import com.amap.api.services.weather.WeatherSearch
+import com.amap.api.services.weather.WeatherSearchQuery
+import com.google.gson.Gson
 import com.orhanobut.logger.Logger
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.util.*
 
-class SportService : Service(), AMapLocationListener, SensorEventListener {
+class SportService : Service(), AMapLocationListener, SensorEventListener, WeatherSearch.OnWeatherSearchListener {
+
     /**
      * 定位相关
      */
     private lateinit var mLocationClient: AMapLocationClient
     private lateinit var mLocationOption: AMapLocationClientOption
+    private lateinit var mQuery: WeatherSearchQuery
+    private lateinit var mWeatherSearch: WeatherSearch
 
     /**
      * 计步相关
@@ -59,10 +71,32 @@ class SportService : Service(), AMapLocationListener, SensorEventListener {
         initStep()
     }
 
+    private fun searchWeather(city: String) {
+        Logger.i(city)
+        mQuery = WeatherSearchQuery(city, WeatherSearchQuery.WEATHER_TYPE_LIVE)
+        mWeatherSearch = WeatherSearch(this)
+        mWeatherSearch.setOnWeatherSearchListener(this)
+        mWeatherSearch.query = mQuery
+        mWeatherSearch.searchWeatherAsyn()
+    }
+
+    override fun onWeatherForecastSearched(p0: LocalWeatherForecastResult?, p1: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onWeatherLiveSearched(localWeatherLiveResult: LocalWeatherLiveResult?, code: Int) {
+        Logger.json(Gson().toJson(localWeatherLiveResult))
+        if (code == 1000) {
+            if (localWeatherLiveResult != null && localWeatherLiveResult.liveResult != null) {
+                EventBus.getDefault().postSticky(localWeatherLiveResult.liveResult)
+            }
+        }
+    }
+
     private fun initLocation() {
         mLocationClient = AMapLocationClient(this)
         mLocationOption = AMapLocationClientOption()
-        mLocationOption.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
+        mLocationOption.locationPurpose = AMapLocationClientOption.AMapLocationPurpose.Sport
         mLocationOption.interval = 2000
         mLocationClient.setLocationOption(mLocationOption)
         mLocationClient.setLocationListener(this)
@@ -72,6 +106,7 @@ class SportService : Service(), AMapLocationListener, SensorEventListener {
     override fun onLocationChanged(location: AMapLocation?) {
         location?.let {
             if (location.errorCode == 0) {
+                searchWeather(location.city)
             }
         }
     }
@@ -80,7 +115,6 @@ class SportService : Service(), AMapLocationListener, SensorEventListener {
         sManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager    //传感器管理器
         val mSensorAccelerometer = sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         sManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_UI)   //注册传感器，设置刷新时间为60ms
-
     }
 
     override fun onSensorChanged(event: SensorEvent) {  //接口的方法，在这里获取三轴加速度，计算出当前的总加速度
@@ -148,19 +182,17 @@ class SportService : Service(), AMapLocationListener, SensorEventListener {
             continueUpCount = 0
             isDirectionUp = false
         }
-        if (!isDirectionUp && lastStatus && continueUpFormerCount >= 2 && oldValue >= 20 && oldValue <= 50) {    //判断波峰的条件，当图像一直增长，突然开始增加时，上个点认为是波峰，参数的变化请注意
+        return if (!isDirectionUp && lastStatus && continueUpFormerCount >= 2 && oldValue >= 20 && oldValue <= 50) {    //判断波峰的条件，当图像一直增长，突然开始增加时，上个点认为是波峰，参数的变化请注意
             peakOfWave = oldValue
-
             if (isSport && countOfWaves <= 500) {   //在运动的时候才记录数据
                 waveList[countOfWaves++] = peakOfWave
             }
-
-            return true
+            true
         } else if (!lastStatus and isDirectionUp) {  //波谷同上
             valleyOfWave = oldValue
-            return false
+            false
         } else {
-            return false
+            false
         }
     }
 
@@ -245,6 +277,5 @@ class SportService : Service(), AMapLocationListener, SensorEventListener {
         mLocationClient.stopLocation()
         mLocationClient.onDestroy()
     }
-
 
 }

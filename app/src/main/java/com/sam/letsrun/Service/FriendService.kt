@@ -5,7 +5,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Binder
 import android.os.IBinder
 import com.blankj.utilcode.util.DeviceUtils
 import com.google.gson.Gson
@@ -26,8 +25,8 @@ class FriendService : Service() {
 
     private var okHttpClient = RetrofitUtils.getOkHttpClient()
 
-    private lateinit var myWebSocketListener: MyWebSocketListener
-    private lateinit var myWebSocket: WebSocket
+    private lateinit var mWebSocketListener: MyWebSocketListener
+    private lateinit var mWebSocket: WebSocket
 
     lateinit var sharedPreferences: SharedPreferences
     private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
@@ -46,9 +45,9 @@ class FriendService : Service() {
         sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
         sharedPreferencesEditor = sharedPreferences.edit()
 
-        myWebSocketListener = MyWebSocketListener()
+        mWebSocketListener = MyWebSocketListener()
 
-        myWebSocket = okHttpClient.newWebSocket(request, myWebSocketListener)
+        mWebSocket = okHttpClient.newWebSocket(request, mWebSocketListener)
     }
 
 
@@ -101,7 +100,7 @@ class FriendService : Service() {
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     fun onMessage(event: SocketRequest) {
-        myWebSocket.send(Gson().toJson(event))
+        mWebSocket.send(Gson().toJson(event))
     }
 
 }

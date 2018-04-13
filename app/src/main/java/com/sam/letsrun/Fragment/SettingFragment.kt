@@ -9,11 +9,17 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Spinner
+import com.afollestad.materialdialogs.GravityEnum
+import com.afollestad.materialdialogs.MaterialDialog
+import com.blankj.utilcode.util.KeyboardUtils
+import com.suke.widget.SwitchButton
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
+import com.jaredrummler.materialspinner.MaterialSpinner
+import com.rengwuxian.materialedittext.MaterialEditText
 import com.sam.letsrun.Activity.LoginActivity
 import com.sam.letsrun.Common.MyUtils
 import com.sam.letsrun.GlideApp
@@ -28,11 +34,9 @@ import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.toast
 import kotlin.math.max
-
 /**
  * 设置fragment
  */
-
 
 @Suppress("UNREACHABLE_CODE")
 class SettingFragment : Fragment(), SettingFragmentView {
@@ -42,6 +46,7 @@ class SettingFragment : Fragment(), SettingFragmentView {
     private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
     private lateinit var token: String
     private lateinit var user: User
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_setting, container, false)
@@ -57,7 +62,42 @@ class SettingFragment : Fragment(), SettingFragmentView {
 
         userSportHistoryLayout.setOnClickListener {}
 
-        userSettingLayout.setOnClickListener {}
+        userSettingLayout.setOnClickListener {
+            val settingDialog = MaterialDialog.Builder(context!!)
+                    .title("设置")
+                    .titleGravity(GravityEnum.CENTER)
+                    .customView(R.layout.dialog_setting, true)
+                    .positiveText("保存")
+                    .onPositive { dialog, which ->
+
+                    }
+                    .negativeText("取消")
+                    .onNegative { dialog, which ->
+
+                    }
+                    .build()
+
+            val rootView: View = settingDialog.customView!!
+            val shareMyLocationButton: SwitchButton = rootView.findViewById(R.id.share_mylocation_button)
+            shareMyLocationButton.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    //TODO
+                }
+            }
+            val goalStepText: MaterialEditText = rootView.findViewById(R.id.goal_step_text)
+            goalStepText.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) {
+                    val goalSteps = goalStepText.text.toString().toInt()
+                }
+            }
+            goalStepText.setOnEditorActionListener { v, _, _ ->
+                goalStepText.clearFocus()
+                KeyboardUtils.hideSoftInput(v)
+                true
+            }
+
+            settingDialog.show()
+        }
 
         appInfoLayout.setOnClickListener{}
 
