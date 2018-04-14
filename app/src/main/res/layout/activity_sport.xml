@@ -30,7 +30,7 @@
         app:layout_constraintVertical_bias="0.28">
 
         <TextView
-            android:id="@+id/distanceView"
+            android:id="@+id/distanceView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -60,18 +60,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearlayout_1">
 
-        <Chronometer
+        <TextView
+            android:id="@+id/timerView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:text="00 : 00"
             android:textColor="#ffffff"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="分:秒"
+            android:text="时间(分:秒)"
             android:textColor="#55ffffff" />
     </LinearLayout>
 
@@ -114,7 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text=""
+            android:text="0.0"
             android:textColor="#ffffff"
             android:textSize="30sp" />
 
@@ -122,7 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="配速"
+            android:text="速度(米/秒)"
             android:textColor="#55ffffff" />
     </LinearLayout>
 
@@ -133,43 +136,38 @@
         android:background="#000000"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <at.markushi.ui.CircleButton
-        android:id="@+id/startButton"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_sport_pause"
-        app:cb_color="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/bottomBlack"
+    <LinearLayout
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/bottomBlack"
-        tools:ignore="VectorDrawableCompat" />
-
-    <at.markushi.ui.CircleButton
-        android:id="@+id/cameraButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_sport_camera"
-        app:cb_color="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/bottomBlack"
-        app:layout_constraintHorizontal_bias="0.85"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/startButton"
-        app:layout_constraintTop_toTopOf="@+id/bottomBlack"
-        tools:ignore="VectorDrawableCompat" />
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <at.markushi.ui.CircleButton
-        android:id="@+id/settingButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_sport_setting"
-        app:cb_color="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/bottomBlack"
-        app:layout_constraintHorizontal_bias="0.15"
-        app:layout_constraintLeft_toRightOf="@+id/startButton"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/bottomBlack"
-        tools:ignore="VectorDrawableCompat" />
+        <Button
+            android:id="@+id/startButton"
+            android:layout_margin="10dp"
+            android:background="@drawable/ic_sport_start_selector"
+            android:layout_width="80dp"
+            android:layout_height="80dp" />
+
+        <com.dinuscxj.progressbar.CircleProgressBar
+            android:id="@+id/stopButton"
+            android:visibility="gone"
+            android:layout_margin="10dp"
+            android:background="@drawable/ic_sport_stop_selector"
+            app:draw_progress_text="false"
+            android:clickable="true"
+            app:style="solid_line"
+            app:progress_stroke_width="3dp"
+            app:progress_background_color="@color/white"
+            app:progress_start_color="@color/bootstrap_gray"
+            app:progress_end_color="@color/bootstrap_gray"
+            android:layout_width="80dp"
+            android:layout_height="80dp"/>
+
+    </LinearLayout>
 
 
     <include

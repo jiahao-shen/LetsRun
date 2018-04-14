@@ -11,7 +11,6 @@ class Const {
 
         /*--ADDRESS--*/
         private const val BASE_IP = "192.168.229.238"
-//        private const val BASE_IP = "172.20.79.119"
         const val BASE_HTTP_ADDRESS = "http://$BASE_IP/AppService/"
         const val BASE_WEBSOCKET_ADDRESS = "ws://$BASE_IP:8000"
 

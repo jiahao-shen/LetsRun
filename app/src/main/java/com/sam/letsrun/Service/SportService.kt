@@ -102,7 +102,7 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
         mLocationClient = AMapLocationClient(this)
         mLocationOption = AMapLocationClientOption()
         mLocationOption.locationPurpose = AMapLocationClientOption.AMapLocationPurpose.Sport
-        mLocationOption.interval = 30000
+        mLocationOption.interval = 60000
         mLocationClient.setLocationOption(mLocationOption)
         mLocationClient.setLocationListener(this)
         mLocationClient.startLocation()

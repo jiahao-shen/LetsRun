@@ -99,6 +99,7 @@ dependencies {
     implementation 'com.sackcentury:shinebutton:0.2.0'
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
     implementation 'com.jaredrummler:material-spinner:1.2.5'
+    implementation 'com.dinuscxj:circleprogressbar:1.1.1'
 }
 MobSDK {
     appKey "249896de5b5ac"
