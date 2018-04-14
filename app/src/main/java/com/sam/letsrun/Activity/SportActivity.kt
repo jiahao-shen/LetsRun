@@ -3,7 +3,7 @@ package com.sam.letsrun.Activity
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
-import android.graphics.BitmapFactory
+import android.location.Location
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -11,17 +11,21 @@ import android.support.annotation.RequiresApi
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
+import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
+import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
 import com.amap.api.maps.AMap
+import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.BitmapDescriptorFactory
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.maps.model.PolylineOptions
+import com.amap.api.services.route.DistanceResult
+import com.amap.api.services.route.DistanceSearch
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.Utils
-import com.google.gson.Gson
 import com.gyf.barlibrary.ImmersionBar
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
@@ -31,16 +35,19 @@ import com.yanzhenjie.permission.Permission
 import kotlinx.android.synthetic.main.activity_sport.*
 import kotlinx.android.synthetic.main.map_view_layout.*
 import org.jetbrains.anko.backgroundResource
+import rx.Observable
+import rx.Subscriber
+import rx.android.schedulers.AndroidSchedulers
 import java.text.DecimalFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.sqrt
 
 /**
  * 运动
- * TODO("还没有把实时的定位信息更新到界面上")
- * TODO("开始,结束和暂停按钮")
+ * TODO("完善测距算法")
  */
-class SportActivity : AppCompatActivity() {
+class SportActivity : AppCompatActivity(), DistanceSearch.OnDistanceSearchListener, AMap.OnMyLocationChangeListener {
 
     private var animationX = 0      //动画起始x
     private var animationY = 0      //动画起始y
@@ -50,24 +57,29 @@ class SportActivity : AppCompatActivity() {
     private var myLocationStyle: MyLocationStyle = MyLocationStyle()    //定位参数
     private var polylineOptions = PolylineOptions()
     private lateinit var currentLocation: LatLng    //当前定位座标
+    private var preLocation: LatLng? = null     //前一个定位座标
+    private var totalDistance = 0.00f       //运动总距离
 
+    /**
+     * 格式化参数
+     */
+    private val timeDecimalFormat = DecimalFormat("00")
+    private val distanceDecimalFormat = DecimalFormat("0.00")
 
-    private enum class Status {
+    private enum class Status {     //运动状态
         START, PAUSE, STOP
     }
 
-    private var sportStatus = Status.STOP
-    private lateinit var sportTimer: Timer
-    private var sportTime = 0
-    private var isPressed = false
+    private var sportStatus = Status.STOP       //运动状态
+    private lateinit var sportTimer: Timer      //运动计时器
+    private var sportTime = 0       //运动总时间
+    private var isPressed = false       //stopButton是否被按压
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sport)
-        Logger.addLogAdapter(AndroidLogAdapter())
-
         mMapView.onCreate(savedInstanceState)
         Utils.init(this)
 
@@ -76,7 +88,6 @@ class SportActivity : AppCompatActivity() {
                 .supportActionBar(false)
                 .navigationBarEnable(true)
                 .init()
-
 
         initPermission()
         initMapView()
@@ -110,14 +121,10 @@ class SportActivity : AppCompatActivity() {
             mapModelMenu.close(true)
         }
 
-        speedView.text = "0'00\""
-
         startButton.setOnClickListener {
             when (sportStatus) {
                 Status.STOP -> {
-                    initSportTimer()
-                    sportStatus = Status.START
-                    startButton.backgroundResource = R.drawable.ic_sport_pause_selector
+                    startCountDown()
                 }
                 Status.START -> {
                     sportStatus = Status.PAUSE
@@ -147,8 +154,57 @@ class SportActivity : AppCompatActivity() {
             false
         }
 
+        backButton.setOnClickListener {
+            MaterialDialog.Builder(this)
+                    .title("提示")
+                    .titleGravity(GravityEnum.CENTER)
+                    .content("您确定要结束运动吗?未完成的记录不会被保存")
+                    .positiveText("确定")
+                    .onPositive { _, _ ->
+                        this.finish()
+                    }
+                    .negativeText("取消")
+                    .onNeutral { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .build()
+                    .show()
+        }
+
+        cameraButton.setOnClickListener {
+            TODO("拍照我也不知道该写什么,先放着把")
+        }
+
     }
 
+    private fun startCountDown() {      //开始倒计时
+        val count = 3
+        Observable.interval(1, TimeUnit.SECONDS)
+                .take(count)
+                .map { aLong -> count - aLong }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Subscriber<Long>() {
+                    override fun onNext(t: Long?) {
+                        countDownView.visibility = View.VISIBLE
+                        countDownView.startAnimation(AnimationUtils.loadAnimation(this@SportActivity, R.anim.count_down_scale_anim))
+                        countDownView.text = "$t"
+                    }
+
+                    override fun onCompleted() {
+                        countDownView.visibility = View.GONE
+                        initSportTimer()
+                        sportStatus = Status.START
+                        startButton.backgroundResource = R.drawable.ic_sport_pause_selector
+                    }
+
+                    override fun onError(e: Throwable?) {
+                    }
+                })
+    }
+
+    /**
+     * 实现按压特效
+     */
     private fun initPressTimer() {
         var progress = 0
         val pressTimer = Timer()
@@ -175,8 +231,12 @@ class SportActivity : AppCompatActivity() {
         }, 0, 15)
     }
 
+    /**
+     * 初始化计时
+     */
     private fun initSportTimer() {
         sportTime = 0
+        totalDistance = 0.0f
         sportTimer = Timer()
         sportTimer.schedule(object : TimerTask() {
             override fun run() = when (sportStatus) {
@@ -196,15 +256,20 @@ class SportActivity : AppCompatActivity() {
                     sportTimer.cancel()
                 }
             }
-        },  0, 1000)
+        },  1000, 1000)
     }
 
+    /**
+     * 获取格式化时间
+     * @param hour
+     * @param minute
+     * @param second
+     */
     private fun getTimeString(hour: Int, minute: Int, second: Int): String {
-        val df = DecimalFormat("00")
         return if (hour == 0) {
-            "${df.format(minute)} : ${df.format(second)}"
+            "${timeDecimalFormat.format(minute)} : ${timeDecimalFormat.format(second)}"
         } else {
-            "${df.format(hour)} : ${df.format(minute)} : ${df.format(second)}"
+            "${timeDecimalFormat.format(hour)} : ${timeDecimalFormat.format(minute)} : ${timeDecimalFormat.format(second)}"
         }
     }
 
@@ -225,13 +290,36 @@ class SportActivity : AppCompatActivity() {
         polylineOptions.width(60f)
         polylineOptions.isUseTexture = true
         polylineOptions.customTexture = BitmapDescriptorFactory.fromAsset("tracelinetexture.png")
-        aMap.setOnMyLocationChangeListener { p ->
-            currentLocation = LatLng(p.latitude, p.longitude)
-            polylineOptions.add(currentLocation)
-            aMap.addPolyline(polylineOptions)
+
+        aMap.setOnMyLocationChangeListener(this)
+    }
+
+    override fun onMyLocationChange(p: Location?) {
+        p?.let {
+            if (sportStatus == Status.START) {      //运动的时候才记录
+                currentLocation = LatLng(p.latitude, p.longitude)       //当前座标
+                if (preLocation == null)        //上一次的座标
+                    preLocation = LatLng(p.latitude, p.longitude)
+                val tempDistance = AMapUtils.calculateLineDistance(preLocation, currentLocation)        //计算距离
+                if (tempDistance >= 0.5)    //消除浮动
+                    totalDistance += tempDistance / 1000      //增到总距离上
+                preLocation = currentLocation       //更新上一次的座标
+                polylineOptions.add(currentLocation)       //添加座标点
+                aMap.addPolyline(polylineOptions)       //绘制路径
+                speedView.text = p.speed.toString()     //更新速度
+                distanceView1.text = distanceDecimalFormat.format(totalDistance).toString()     //更新距离1
+                distanceView2.text = distanceDecimalFormat.format(totalDistance).toString()     //更新距离2
+            }
         }
     }
 
+    override fun onDistanceSearched(distanceResult: DistanceResult?, code: Int) {
+        if (code == 1000) {
+            distanceResult?.let {
+                TODO("用高德的API增加总距离")
+            }
+        }
+    }
     /**
      * 展示地图
      */

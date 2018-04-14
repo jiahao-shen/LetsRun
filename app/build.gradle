@@ -47,7 +47,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation files('libs/AMap3DMap_6.0.1_AMapSearch_5.7.0_AMapLocation_3.8.0_20180309.jar')
     implementation 'org.jetbrains.anko:anko:0.10.4'
     implementation 'com.squareup.okhttp3:okhttp:3.9.0'
     implementation 'io.reactivex:rxkotlin:1.0.0'
@@ -100,6 +99,7 @@ dependencies {
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
     implementation 'com.jaredrummler:material-spinner:1.2.5'
     implementation 'com.dinuscxj:circleprogressbar:1.1.1'
+    implementation files('libs/AMap3DMap_6.1.0_AMapNavi_6.0.1_AMapSearch_6.1.0_AMapLocation_3.8.0_20180330.jar')
 }
 MobSDK {
     appKey "249896de5b5ac"
