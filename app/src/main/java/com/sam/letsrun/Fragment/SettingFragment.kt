@@ -19,7 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
 import com.rengwuxian.materialedittext.MaterialEditText
 import com.sam.letsrun.Activity.LoginActivity
-import com.sam.letsrun.Common.MyUtils
+import com.sam.letsrun.Custom.MyUtils
 import com.sam.letsrun.GlideApp
 import com.sam.letsrun.Model.User
 import com.sam.letsrun.Presenter.SettingFragmentPresenter

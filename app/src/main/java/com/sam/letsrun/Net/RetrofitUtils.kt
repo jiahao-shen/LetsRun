@@ -1,6 +1,6 @@
 package com.sam.runapp.Net
 
-import com.sam.letsrun.Common.Const
+import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.Net.NetService
 import okhttp3.OkHttpClient
 import okhttp3.Request

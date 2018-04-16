@@ -2,9 +2,8 @@ package com.sam.letsrun.Adapter
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseSectionQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.sam.letsrun.Common.MyUtils
+import com.sam.letsrun.Custom.MyUtils
 import com.sam.letsrun.GlideApp
 import com.sam.letsrun.Model.AddFriendRequest
 import com.sam.letsrun.R

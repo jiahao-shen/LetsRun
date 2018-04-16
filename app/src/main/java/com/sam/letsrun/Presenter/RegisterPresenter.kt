@@ -1,12 +1,11 @@
 package com.sam.letsrun.Presenter
 
 import android.app.Activity
-import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import com.google.gson.GsonBuilder
-import com.sam.letsrun.Common.Const
-import com.sam.letsrun.Common.MyUtils
+import com.sam.letsrun.Custom.Const
+import com.sam.letsrun.Custom.MyUtils
 import com.sam.letsrun.Model.RegisterRequest
 import com.sam.letsrun.Model.RegisterResponse
 import com.sam.letsrun.Model.User
@@ -26,18 +25,6 @@ import java.io.File
 class RegisterPresenter {
 
     lateinit var mView: RegisterView
-
-    fun cropImage(activity: Activity, source: Uri) {
-        val dir =  File(Const.LOCAL_PATH)
-        if (!dir.exists()) {
-            dir.mkdir()
-        }
-        val destination = Uri.fromFile(File(activity.cacheDir, "${System.currentTimeMillis()}.jpg"))
-        UCrop.of(source, destination)
-                .withAspectRatio(1.0f, 1.0f)
-                .withMaxResultSize(400, 400)
-                .start(activity)
-    }
 
     fun register(telephone: String, password: String, userName: String, gender: String, birthday: String?, blood: String?, height: Int?, weight: Int?) {
         val service = RetrofitUtils.getService()

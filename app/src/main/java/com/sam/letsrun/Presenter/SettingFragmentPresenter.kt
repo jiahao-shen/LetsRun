@@ -1,7 +1,7 @@
 package com.sam.letsrun.Presenter
 
 import com.google.gson.Gson
-import com.sam.letsrun.Common.Const
+import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.Model.LogoutResponse
 import com.sam.letsrun.View.SettingFragmentView
 import com.sam.runapp.Net.RetrofitUtils

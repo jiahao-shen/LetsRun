@@ -2,32 +2,26 @@ package com.sam.letsrun.Activity
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
+import android.graphics.Bitmap
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.support.v4.app.Fragment
-import android.support.v4.content.FileProvider
 import android.widget.RadioButton
 import com.google.gson.Gson
-import com.orhanobut.logger.Logger
 import com.sam.letsrun.Adapter.MyFragmentAdapter
-import com.sam.letsrun.Common.Const
-import com.sam.letsrun.Common.MyUtils
+import com.sam.letsrun.Custom.Const
+import com.sam.letsrun.Custom.MyUtils
 import com.sam.letsrun.Fragment.*
 import com.sam.letsrun.Model.User
 import com.sam.letsrun.Presenter.RegisterPresenter
 import com.sam.letsrun.R
 import com.sam.letsrun.View.RegisterView
-import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.android.synthetic.main.fragment_register_c.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.io.File
+import java.io.FileOutputStream
 
 /**
  * 注册
@@ -61,7 +55,6 @@ class RegisterActivity : AppCompatActivity(), RegisterView {
     private lateinit var telephone: String
     private lateinit var password: String
     private lateinit var userName: String
-    private lateinit var tempUri: Uri
     private var gender: String = "男"
     private var birthday: String? = null
     private var blood: String? = null
@@ -123,53 +116,6 @@ class RegisterActivity : AppCompatActivity(), RegisterView {
         }
     }
 
-    /**
-     * 拍照和相册调用回调
-     */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            Const.SELECT_IMAGE_ALBUM -> {   //相册选择回调
-                if (resultCode == RESULT_OK) {
-                    data?.data?.let { presenter.cropImage(this, it) }   //跳转至剪裁
-                }
-            }
-            Const.SELECT_IMAGE_PHOTO -> {   //拍照回调
-                if (resultCode == RESULT_OK) {
-                    presenter.cropImage(this, tempUri)  //跳转至剪裁
-                }
-            }
-            UCrop.REQUEST_CROP -> {     //剪裁回调
-                if (resultCode == RESULT_OK) {
-                    UCrop.getOutput(data!!)?.let {      //设置用户头像
-                        fragmentC.setUserImage(it)
-                        MyUtils.saveImageView((fragmentC.userImageView.drawable as BitmapDrawable).bitmap, telephone)
-                    }
-                }
-            }
-        }
-    }
-
-
-    /**
-     * 拍照
-     */
-    override fun selectImageCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        tempUri = FileProvider.getUriForFile(this, "com.sam.letsrun", File(cacheDir, "${System.currentTimeMillis()}.jpg"))  //拍照图片的临时存储路径
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri)
-        startActivityForResult(intent, Const.SELECT_IMAGE_PHOTO)
-    }
-
-    /**
-     * 从相册选择图片
-     */
-    override fun selectImageAlbum() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, Const.SELECT_IMAGE_ALBUM)
-    }
-
     override fun initTelephone(data: String) {
         telephone = data
     }
@@ -200,6 +146,10 @@ class RegisterActivity : AppCompatActivity(), RegisterView {
 
     override fun initWeight(data: Int) {
         weight = data
+    }
+
+    override fun initImage(bitmap: Bitmap) {
+        MyUtils.saveImageView(bitmap, telephone)
     }
 
     override fun unKnownError() {

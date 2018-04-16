@@ -1,4 +1,4 @@
-package com.sam.letsrun.Common
+package com.sam.letsrun.Custom
 
 import android.os.Environment
 import okhttp3.MediaType
@@ -10,7 +10,7 @@ class Const {
     companion object {
 
         /*--ADDRESS--*/
-        private const val BASE_IP = "192.168.229.238"
+        private const val BASE_IP = "120.78.218.59" //阿里云服务器
         const val BASE_HTTP_ADDRESS = "http://$BASE_IP/AppService/"
         const val BASE_WEBSOCKET_ADDRESS = "ws://$BASE_IP:8000"
 
@@ -63,7 +63,7 @@ class Const {
         const val LOAD_FRIEND_LIST_SUCCESS = 60
 
         /*--ACTIVITY_REQUEST--*/
-        const val SELECT_IMAGE_PHOTO = 101
+        const val SELECT_IMAGE_CAMERA = 101
         const val SELECT_IMAGE_ALBUM = 102
 
         const val NEWS_HTTP_ADDRESS = "http://v.juhe.cn/toutiao/index?type=tiyu&key=1b42a673db5d082403746c1c670ac6ac"

@@ -10,7 +10,7 @@ import com.blankj.utilcode.util.DeviceUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.orhanobut.logger.Logger
-import com.sam.letsrun.Common.Const
+import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.Model.*
 import com.sam.runapp.Net.RetrofitUtils
 import okhttp3.*

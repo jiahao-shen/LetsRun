@@ -7,7 +7,7 @@ import com.blankj.utilcode.util.RegexUtils
 import com.google.gson.Gson
 import com.mob.MobSDK
 import com.orhanobut.logger.Logger
-import com.sam.letsrun.Common.Const
+import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.Model.CheckPhoneResponse
 import com.sam.letsrun.View.RegisterFragmentView
 import com.sam.runapp.Net.RetrofitUtils

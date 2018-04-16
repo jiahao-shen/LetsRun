@@ -2,8 +2,8 @@ package com.sam.letsrun.Presenter
 
 import com.blankj.utilcode.util.RegexUtils
 import com.google.gson.Gson
-import com.sam.letsrun.Common.Const
-import com.sam.letsrun.Common.MyUtils
+import com.sam.letsrun.Custom.Const
+import com.sam.letsrun.Custom.MyUtils
 import com.sam.letsrun.Model.LoginResponse
 import com.sam.letsrun.View.LoginView
 import com.sam.runapp.Net.RetrofitUtils

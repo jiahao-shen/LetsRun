@@ -72,16 +72,18 @@ class SportFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessage(event: LocalWeatherLive) {
-        for ((index, value) in weatherList.withIndex()) {
-            if (value == event.weather) {
-                weatherImageView.setImageResource(weatherImageList.getResourceId(index, 0))
-                break
+    fun onMessage(event: LocalWeatherLive?) {
+        event?.let {
+            for ((index, value) in weatherList.withIndex()) {
+                if (value == event.weather) {
+                    weatherImageView.setImageResource(weatherImageList.getResourceId(index, 0))
+                    break
+                }
             }
+            cityTextView.text = event.city
+            weatherInfoTextView1.text = "${event.temperature}°C"
+            weatherInfoTextView2.text = "${event.windDirection}风 ${event.windPower}级    湿度 ${event.humidity}%"
         }
-        cityTextView.text = event.city
-        weatherInfoTextView1.text = "${event.temperature}°C"
-        weatherInfoTextView2.text = "${event.windDirection}风 ${event.windPower}级    湿度 ${event.humidity}%"
     }
 
     @SuppressLint("Recycle")

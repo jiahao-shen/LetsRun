@@ -2,7 +2,7 @@ package com.sam.letsrun.Presenter
 
 import com.google.gson.Gson
 import com.orhanobut.logger.Logger
-import com.sam.letsrun.Common.Const
+import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.Model.*
 import com.sam.letsrun.View.FriendFragmentView
 import com.sam.runapp.Net.RetrofitUtils

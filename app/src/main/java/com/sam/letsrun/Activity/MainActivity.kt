@@ -7,12 +7,11 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import com.blankj.utilcode.util.DeviceUtils
 import com.google.gson.Gson
 import com.gyf.barlibrary.ImmersionBar
 import com.orhanobut.logger.Logger
 import com.sam.letsrun.Adapter.MyFragmentAdapter
-import com.sam.letsrun.Common.Const
+import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.Fragment.*
 import com.sam.letsrun.Model.AddFriendRequest
 import com.sam.letsrun.Model.SocketRequest

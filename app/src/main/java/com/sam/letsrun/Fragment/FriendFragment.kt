@@ -23,14 +23,12 @@ import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.Utils
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.miguelcatalan.materialsearchview.MaterialSearchView
-import com.orhanobut.logger.Logger
 import com.rengwuxian.materialedittext.MaterialEditText
 import com.sam.letsrun.Adapter.AddFriendAdapter
 import com.sam.letsrun.Adapter.FriendListAdapter
-import com.sam.letsrun.Common.Const
-import com.sam.letsrun.Common.MyUtils
+import com.sam.letsrun.Custom.Const
+import com.sam.letsrun.Custom.MyUtils
 import com.sam.letsrun.GlideApp
 import com.sam.letsrun.Model.AddFriendRequest
 import com.sam.letsrun.Model.Friend

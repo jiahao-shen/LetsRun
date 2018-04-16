@@ -9,10 +9,6 @@ interface RegisterView {
 
     fun nextFragment()
 
-    fun selectImageAlbum()
-
-    fun selectImageCamera()
-
     fun initTelephone(data: String)
 
     fun initPassword(data: String)
@@ -28,6 +24,8 @@ interface RegisterView {
     fun initHeight(data: Int)
 
     fun initWeight(data: Int)
+
+    fun initImage(bitmap: Bitmap)
 
     fun unKnownError()
 

@@ -1,6 +1,7 @@
-package com.sam.letsrun.Common
+package com.sam.letsrun.Custom
 
 import android.graphics.Bitmap
+import com.orhanobut.logger.Logger
 import java.io.File
 import java.io.FileOutputStream
 import java.security.MessageDigest
@@ -34,8 +35,13 @@ object MyUtils {
      */
     fun saveImageView(bitmap: Bitmap, name: String) {
         val file = File(Const.LOCAL_PATH, "$name.jpg")
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, FileOutputStream(file))
-
+        if (file.exists()) {
+            file.delete()
+        }
+        val out = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+        out.flush()
+        out.close()
     }
 
     fun getImageUrl(name: String) = "${Const.BASE_HTTP_ADDRESS}/UserImage/$name.jpg"
