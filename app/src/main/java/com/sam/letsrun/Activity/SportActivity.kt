@@ -8,6 +8,7 @@ import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.RequiresApi
+import android.support.v7.widget.LinearLayoutManager
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
@@ -80,6 +81,7 @@ class SportActivity : AppCompatActivity(), DistanceSearch.OnDistanceSearchListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sport)
+        Logger.addLogAdapter(AndroidLogAdapter())
         mMapView.onCreate(savedInstanceState)
         Utils.init(this)
 
@@ -94,8 +96,12 @@ class SportActivity : AppCompatActivity(), DistanceSearch.OnDistanceSearchListen
 
         showMapButton.setOnClickListener { v ->
             //获取button的中心座标
-            animationX = (v.left + v.right) / 2
-            animationY = (v.top + v.bottom) / 2
+            val location = IntArray(2)
+            v.getLocationOnScreen(location)
+            animationX = (v.left + v.right) / 2 + location[0]
+            animationY = (v.top + v.bottom) / 2 + location[1]
+
+            Logger.i("$animationX, $animationY")
             showMapView()
         }
 

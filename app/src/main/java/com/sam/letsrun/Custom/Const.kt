@@ -10,15 +10,12 @@ class Const {
     companion object {
 
         /*--ADDRESS--*/
-//        private const val BASE_IP = "120.78.218.59" //阿里云服务器
-        private const val BASE_IP = "172.20.27.157"
+        private const val BASE_IP = "120.78.218.59" //阿里云服务器
         const val BASE_HTTP_ADDRESS = "http://$BASE_IP/AppService/"
         const val BASE_WEBSOCKET_ADDRESS = "ws://$BASE_IP:8000"
 
         /*--TYPE--*/
-        val JSONTYPE = MediaType.parse("application/json;charset=utf-8")
         val FILETYPE = MediaType.parse("multipart/form-data")
-        val JPEGTYPE = MediaType.parse("image/jpeg")
 
         /*--LOCAL_FILE--*/
         val LOCAL_PATH = "${Environment.getExternalStorageDirectory()}/LetsRun"
