@@ -22,21 +22,26 @@ class NewsFragmentPresenter {
         service.loadNews()
                 .enqueue(object : Callback<NewsResponse> {
                     override fun onFailure(call: Call<NewsResponse>?, t: Throwable?) {
-                        Logger.i("failure")
+                        mView.loadError()
                     }
 
-                    override fun onResponse(call: Call<NewsResponse>?, response: Response<NewsResponse>) {
-                        val newsResponse = response.body() as NewsResponse
-                        when (newsResponse.error_code) {
-                            0 -> {
-                                val newsList = newsResponse.result.data
-                                for (item in newsList) {
-                                    item.thumbnail_pic_s?.let { item.type = News.SINGLE }
-                                    item.thumbnail_pic_s03?.let { item.type = News.MULTI }
+                    override fun onResponse(call: Call<NewsResponse>?, response: Response<NewsResponse>?) {
+                        if (response != null) {
+                            val newsResponse = response.body() as NewsResponse
+                            when (newsResponse.error_code) {
+                                0 -> {
+                                    val newsList = newsResponse.result.data
+                                    for (item in newsList) {
+                                        item.thumbnail_pic_s?.let { item.type = News.SINGLE }
+                                        item.thumbnail_pic_s03?.let { item.type = News.MULTI }
+                                    }
+                                    mView.loadSuccess(newsList)
                                 }
-                                mView.loadSuccess(newsList)
                             }
+                        } else {
+                            mView.loadError()
                         }
+
                     }
                 })
     }

@@ -118,19 +118,23 @@ class RegisterFragmentPresenter {
                         mView.netError()
                     }
 
-                    override fun onResponse(call: Call<CheckPhoneResponse>?, response: Response<CheckPhoneResponse>) {
-                        val result = response.body() as CheckPhoneResponse
-                        Logger.json(Gson().toJson(result))
-                        when (result.msg) {
-                            Const.TELEPHONE_NOT_EXIST -> {
-                                SMSSDK.getVerificationCode("86", telephone)
+                    override fun onResponse(call: Call<CheckPhoneResponse>?, response: Response<CheckPhoneResponse>?) {
+                        if (response != null) {
+                            val result = response.body() as CheckPhoneResponse
+                            Logger.json(Gson().toJson(result))
+                            when (result.msg) {
+                                Const.TELEPHONE_NOT_EXIST -> {
+                                    SMSSDK.getVerificationCode("86", telephone)
+                                }
+                                Const.TELEPHONE_ALREADY_EXIST -> {
+                                    mView.telephoneAlreadyExist()
+                                }
+                                Const.UNKNOWN_ERROR -> {
+                                    mView.unKnownError()
+                                }
                             }
-                            Const.TELEPHONE_ALREADY_EXIST -> {
-                                mView.telephoneAlreadyExist()
-                            }
-                            Const.UNKNOWN_ERROR -> {
-                                mView.unKnownError()
-                            }
+                        } else {
+                            mView.unKnownError()
                         }
                     }
                 })

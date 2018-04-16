@@ -41,16 +41,21 @@ class RegisterPresenter {
                         Log.i("error", t.toString())
                     }
 
-                    override fun onResponse(call: Call<RegisterResponse>?, response: Response<RegisterResponse>) {
-                        val result = response.body() as RegisterResponse
-                        when (result.msg) {
-                            Const.REGISTER_SUCCESS -> {
-                                result.token?.let { mView.registerSuccess(it) }
+                    override fun onResponse(call: Call<RegisterResponse>?, response: Response<RegisterResponse>?) {
+                        if (response != null) {
+                            val result = response.body() as RegisterResponse
+                            when (result.msg) {
+                                Const.REGISTER_SUCCESS -> {
+                                    result.token?.let { mView.registerSuccess(it) }
+                                }
+                                Const.UNKNOWN_ERROR -> {
+                                    mView.unKnownError()
+                                }
                             }
-                            Const.UNKNOWN_ERROR -> {
-                                mView.unKnownError()
-                            }
+                        } else {
+                            mView.unKnownError()
                         }
+
                     }
                 })
     }

@@ -27,7 +27,6 @@ class AdvertisementPresenter {
             mView.loadFailed()
         else {
             val service = RetrofitUtils.getService()
-//            val request = AdvertisementRequest(telephone, token)
             val request = hashMapOf("telephone" to telephone, "token" to token)
             //否则初始化用户信息
             service.loadInfo(Gson().toJson(request))
@@ -37,16 +36,20 @@ class AdvertisementPresenter {
                             mView.loadFailed()
                         }
 
-                        override fun onResponse(call: Call<AdvertisementResponse>?, response: Response<AdvertisementResponse>) {
-                            val myResponse = response.body() as AdvertisementResponse
-                            when (myResponse.msg) {
+                        override fun onResponse(call: Call<AdvertisementResponse>?, response: Response<AdvertisementResponse>?) {
+                            if (response != null) {
+                                val myResponse = response.body() as AdvertisementResponse
+                                when (myResponse.msg) {
                                 //失败
-                                Const.REQUEST_FAILED -> mView.loadFailed()
+                                    Const.REQUEST_FAILED -> mView.loadFailed()
 
                                 //成功
-                                Const.REQUEST_SUCCESS -> {
-                                    mView.loadSuccess(myResponse.user!!)
+                                    Const.REQUEST_SUCCESS -> {
+                                        mView.loadSuccess(myResponse.user!!)
+                                    }
                                 }
+                            } else {
+                                mView.loadFailed()
                             }
                         }
                     })

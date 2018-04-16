@@ -42,20 +42,24 @@ class LoginPresenter {
                             mView.netError()
                         }
 
-                        override fun onResponse(call: Call<LoginResponse>?, response: Response<LoginResponse>) {
-                            val loginResponse = response.body() as LoginResponse
-                            when (loginResponse.msg) {
-                                Const.LOGIN_SUCCESS -> {
-                                    mView.loginSuccess(loginResponse)
+                        override fun onResponse(call: Call<LoginResponse>?, response: Response<LoginResponse>?) {
+                            if (response != null) {
+                                val loginResponse = response.body() as LoginResponse
+                                when (loginResponse.msg) {
+                                    Const.LOGIN_SUCCESS -> {
+                                        mView.loginSuccess(loginResponse)
+                                    }
+
+                                    Const.TELEPHONE_NOT_EXIST -> mView.telephoneNotExist()
+
+                                    Const.PASSWORD_ERROR -> mView.passwordError()
+
+                                    Const.UNKNOWN_ERROR -> mView.loginFailed()
+
+                                    Const.ALREADY_LOGIN -> mView.alreadyLogin()
                                 }
-
-                                Const.TELEPHONE_NOT_EXIST -> mView.telephoneNotExist()
-
-                                Const.PASSWORD_ERROR -> mView.passwordError()
-
-                                Const.UNKNOWN_ERROR -> mView.loginFailed()
-
-                                Const.ALREADY_LOGIN -> mView.alreadyLogin()
+                            } else {
+                                mView.netError()
                             }
                         }
                     })

@@ -5,5 +5,4 @@ package com.sam.letsrun.Presenter
  */
 class SportFragmentPresenter {
 
-
 }

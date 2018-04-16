@@ -221,6 +221,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
     }
 
     private fun showFriendRequestDialog() {  //显示好友申请列表
+
         friendRequestDialog = MaterialDialog.Builder(this.context!!)
                 .title("好友申请")
                 .titleGravity(GravityEnum.CENTER)
@@ -234,13 +235,30 @@ class FriendFragment : Fragment(), FriendFragmentView {
         val adapter = AddFriendAdapter(friendRequestList)      //初始化适配器
         adapter.emptyView = View.inflate(context, R.layout.dialog_empty_add_friend, null)       //加载空布局
         recyclerView.adapter = adapter      //绑定适配器
+
+        fun checkRequestList() {
+            if (friendRequestList.size == 0) {
+                agreeButton.visibility = View.GONE
+                refuseButton.visibility = View.GONE
+            } else {
+                agreeButton.visibility = View.VISIBLE
+                refuseButton.visibility = View.VISIBLE
+            }
+        }
+
+        checkRequestList()
+
         agreeButton.setOnClickListener {        //同意按钮
             addFriendAnswer(Const.ADD_FRIEND_AGREE, adapter, recyclerView)
+            checkRequestList()
         }
         refuseButton.setOnClickListener {       //拒绝按钮
             addFriendAnswer(Const.ADD_FRIEND_REFUSE, adapter, recyclerView)
+            checkRequestList()
         }
         friendRequestDialog.show()
+
+
     }
 
     private fun addFriendAnswer(msg: Int, adapter: AddFriendAdapter, recyclerView: RecyclerView) {      //好友申请回复
