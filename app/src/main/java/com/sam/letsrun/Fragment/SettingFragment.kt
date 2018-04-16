@@ -56,26 +56,26 @@ class SettingFragment : Fragment(), SettingFragmentView {
         presenter.mView = this
 
         userInformationLayout.setOnClickListener {
-            TODO("修改用户信息")
+//            TODO("修改用户信息")
         }
 
         userSportHistoryLayout.setOnClickListener {
-            TODO("展示运动历史记录")
+//            TODO("展示运动历史记录")
         }
 
         userSettingLayout.setOnClickListener {      //设置
-            TODO("添加设置栏目")
+//            TODO("添加设置栏目")
             val settingDialog = MaterialDialog.Builder(context!!)
                     .title("设置")
                     .titleGravity(GravityEnum.CENTER)
                     .customView(R.layout.dialog_setting, true)
                     .positiveText("保存")
                     .onPositive { dialog, which ->
-                        TODO("保存事件")
+//                        TODO("保存事件")
                     }
                     .negativeText("取消")
                     .onNegative { dialog, which ->
-                        TODO("取消事件")
+//                        TODO("取消事件")
                     }
                     .build()
 
@@ -83,7 +83,7 @@ class SettingFragment : Fragment(), SettingFragmentView {
             val shareMyLocationButton: SwitchButton = rootView.findViewById(R.id.share_mylocation_button)
             shareMyLocationButton.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    TODO("")
+//                    TODO("")
                 }
             }
             val goalStepText: MaterialEditText = rootView.findViewById(R.id.goal_step_text)
@@ -107,19 +107,6 @@ class SettingFragment : Fragment(), SettingFragmentView {
             presenter.logout(user.telephone, token)
         }
 
-        settingRefreshLayout.setOnMultiPurposeListener(object : SimpleMultiPurposeListener() {      //根据滑动的距离会改变模糊度
-            override fun onHeaderMoving(header: RefreshHeader?, isDragging: Boolean, percent: Float, offset: Int, headerHeight: Int, maxDragHeight: Int) {
-                super.onHeaderMoving(header, isDragging, percent, offset, headerHeight, maxDragHeight)
-                val radius: Int = max((10 * (1 - percent)).toInt(), 0)
-                if (radius == 0) {
-                    settingBackgroundBlur.visibility = View.INVISIBLE
-                } else {
-                    settingBackgroundBlur.visibility = View.VISIBLE
-                    settingBackgroundBlur.setBlurRadius(radius)
-                }
-            }
-
-        })
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -159,6 +146,7 @@ class SettingFragment : Fragment(), SettingFragmentView {
                 .putString("user", "")
                 .commit()
         startActivity(intentFor<LoginActivity>().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+        activity?.finish()
     }
 
     override fun logoutFailed() {

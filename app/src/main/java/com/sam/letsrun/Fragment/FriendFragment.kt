@@ -19,6 +19,7 @@ import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
 import com.beardedhen.androidbootstrap.BootstrapButton
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
+import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.Utils
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -159,6 +160,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
                 mView.addFriendRequest(searchQuery, searchAddInfo.text.toString())
                 toast("已发送好友请求")
                 searchUserDialog.cancel()
+                KeyboardUtils.hideSoftInput(view)
             } else {
                 toast("验证消息过长")
             }

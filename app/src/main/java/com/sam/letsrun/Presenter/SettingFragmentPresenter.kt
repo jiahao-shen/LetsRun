@@ -31,19 +31,14 @@ class SettingFragmentPresenter {
                     }
 
                     override fun onResponse(call: Call<LogoutResponse>?, response: Response<LogoutResponse>?) {
-                        if (response != null) {
-                            val logoutResponse = response.body() as LogoutResponse
-                            when (logoutResponse.msg) {
-                                Const.LOGOUT_SUCCESS -> mView.logoutSuccess()
+                        val logoutResponse = response?.body() as LogoutResponse
+                        when (logoutResponse.msg) {
+                            Const.LOGOUT_SUCCESS -> mView.logoutSuccess()
 
-                                Const.LOGOUT_FAILED -> mView.logoutFailed()
+                            Const.LOGOUT_FAILED -> mView.logoutFailed()
 
-                                Const.UNKNOWN_ERROR -> mView.unKnownError()
-                            }
-                        } else {
-                            mView.unKnownError()
+                            Const.UNKNOWN_ERROR -> mView.unKnownError()
                         }
-
                     }
                 })
     }

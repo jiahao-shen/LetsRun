@@ -20,7 +20,7 @@
         tools:ignore="VectorDrawableCompat" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/userName"
+        android:id="@+id/userNameText"
         app:layout_constraintLeft_toLeftOf="@+id/userImageView"
         app:layout_constraintRight_toRightOf="@+id/userImageView"
         app:layout_constraintTop_toBottomOf="@+id/userImageView"
@@ -44,9 +44,9 @@
         android:text="下一步"
         app:bootstrapBrand="danger"
         app:bootstrapSize="xl"
-        app:layout_constraintLeft_toLeftOf="@+id/userName"
-        app:layout_constraintRight_toRightOf="@+id/userName"
-        app:layout_constraintTop_toBottomOf="@+id/userName"
+        app:layout_constraintLeft_toLeftOf="@+id/userNameText"
+        app:layout_constraintRight_toRightOf="@+id/userNameText"
+        app:layout_constraintTop_toBottomOf="@+id/userNameText"
         app:roundedCorners="true" />
 
 </android.support.constraint.ConstraintLayout>

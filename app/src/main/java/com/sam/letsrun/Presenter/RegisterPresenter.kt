@@ -3,7 +3,10 @@ package com.sam.letsrun.Presenter
 import android.app.Activity
 import android.net.Uri
 import android.util.Log
+import com.blankj.utilcode.util.EncryptUtils
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.orhanobut.logger.Logger
 import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.Custom.MyUtils
 import com.sam.letsrun.Model.RegisterRequest
@@ -29,7 +32,7 @@ class RegisterPresenter {
     fun register(telephone: String, password: String, userName: String, gender: String, birthday: String?, blood: String?, height: Int?, weight: Int?) {
         val service = RetrofitUtils.getService()
 
-        val user = User(telephone, MyUtils.md5(password), userName, null, null, birthday, gender, blood, height, weight)
+        val user = User(telephone, EncryptUtils.encryptMD5ToString(password), userName, null, null, birthday, gender, blood, height, weight)
 
         val request = RegisterRequest(Const.REGISTER, user)
         val file = File(Const.LOCAL_PATH, "$telephone.jpg")
@@ -42,20 +45,15 @@ class RegisterPresenter {
                     }
 
                     override fun onResponse(call: Call<RegisterResponse>?, response: Response<RegisterResponse>?) {
-                        if (response != null) {
-                            val result = response.body() as RegisterResponse
-                            when (result.msg) {
-                                Const.REGISTER_SUCCESS -> {
-                                    result.token?.let { mView.registerSuccess(it) }
-                                }
-                                Const.UNKNOWN_ERROR -> {
-                                    mView.unKnownError()
-                                }
+                        val result = response?.body() as RegisterResponse
+                        when (result.msg) {
+                            Const.REGISTER_SUCCESS -> {
+                                result.token?.let { mView.registerSuccess(it) }
                             }
-                        } else {
-                            mView.unKnownError()
+                            Const.UNKNOWN_ERROR -> {
+                                mView.unKnownError()
+                            }
                         }
-
                     }
                 })
     }

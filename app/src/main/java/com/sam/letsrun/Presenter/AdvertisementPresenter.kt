@@ -37,19 +37,15 @@ class AdvertisementPresenter {
                         }
 
                         override fun onResponse(call: Call<AdvertisementResponse>?, response: Response<AdvertisementResponse>?) {
-                            if (response != null) {
-                                val myResponse = response.body() as AdvertisementResponse
-                                when (myResponse.msg) {
-                                //失败
-                                    Const.REQUEST_FAILED -> mView.loadFailed()
+                            val myResponse = response?.body() as AdvertisementResponse
+                            when (myResponse.msg) {
+                            //失败
+                                Const.REQUEST_FAILED -> mView.loadFailed()
 
-                                //成功
-                                    Const.REQUEST_SUCCESS -> {
-                                        mView.loadSuccess(myResponse.user!!)
-                                    }
+                            //成功
+                                Const.REQUEST_SUCCESS -> {
+                                    mView.loadSuccess(myResponse.user!!)
                                 }
-                            } else {
-                                mView.loadFailed()
                             }
                         }
                     })

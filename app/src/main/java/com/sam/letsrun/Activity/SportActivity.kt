@@ -172,7 +172,7 @@ class SportActivity : AppCompatActivity(), DistanceSearch.OnDistanceSearchListen
         }
 
         cameraButton.setOnClickListener {
-            TODO("拍照我也不知道该写什么,先放着把")
+//            TODO("拍照我也不知道该写什么,先放着把")
         }
 
     }

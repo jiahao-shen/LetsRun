@@ -1,5 +1,6 @@
 package com.sam.letsrun.Presenter
 
+import com.blankj.utilcode.util.EncryptUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.google.gson.Gson
 import com.sam.letsrun.Custom.Const
@@ -35,7 +36,7 @@ class LoginPresenter {
         }
         else -> {
             val service = RetrofitUtils.getService()
-            val request = hashMapOf("telephone" to telephone, "password" to MyUtils.md5(password))
+            val request = hashMapOf("telephone" to telephone, "password" to EncryptUtils.encryptMD5ToString(password))
             service.login(Gson().toJson(request))
                     .enqueue(object : Callback<LoginResponse> {
                         override fun onFailure(call: Call<LoginResponse>?, t: Throwable?) {
@@ -43,23 +44,19 @@ class LoginPresenter {
                         }
 
                         override fun onResponse(call: Call<LoginResponse>?, response: Response<LoginResponse>?) {
-                            if (response != null) {
-                                val loginResponse = response.body() as LoginResponse
-                                when (loginResponse.msg) {
-                                    Const.LOGIN_SUCCESS -> {
-                                        mView.loginSuccess(loginResponse)
-                                    }
-
-                                    Const.TELEPHONE_NOT_EXIST -> mView.telephoneNotExist()
-
-                                    Const.PASSWORD_ERROR -> mView.passwordError()
-
-                                    Const.UNKNOWN_ERROR -> mView.loginFailed()
-
-                                    Const.ALREADY_LOGIN -> mView.alreadyLogin()
+                            val loginResponse = response?.body() as LoginResponse
+                            when (loginResponse.msg) {
+                                Const.LOGIN_SUCCESS -> {
+                                    mView.loginSuccess(loginResponse)
                                 }
-                            } else {
-                                mView.netError()
+
+                                Const.TELEPHONE_NOT_EXIST -> mView.telephoneNotExist()
+
+                                Const.PASSWORD_ERROR -> mView.passwordError()
+
+                                Const.UNKNOWN_ERROR -> mView.loginFailed()
+
+                                Const.ALREADY_LOGIN -> mView.alreadyLogin()
                             }
                         }
                     })

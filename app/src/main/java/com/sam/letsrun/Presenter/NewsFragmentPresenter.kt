@@ -26,22 +26,17 @@ class NewsFragmentPresenter {
                     }
 
                     override fun onResponse(call: Call<NewsResponse>?, response: Response<NewsResponse>?) {
-                        if (response != null) {
-                            val newsResponse = response.body() as NewsResponse
-                            when (newsResponse.error_code) {
-                                0 -> {
-                                    val newsList = newsResponse.result.data
-                                    for (item in newsList) {
-                                        item.thumbnail_pic_s?.let { item.type = News.SINGLE }
-                                        item.thumbnail_pic_s03?.let { item.type = News.MULTI }
-                                    }
-                                    mView.loadSuccess(newsList)
+                        val newsResponse = response?.body() as NewsResponse
+                        when (newsResponse.error_code) {
+                            0 -> {
+                                val newsList = newsResponse.result.data
+                                for (item in newsList) {
+                                    item.thumbnail_pic_s?.let { item.type = News.SINGLE }
+                                    item.thumbnail_pic_s03?.let { item.type = News.MULTI }
                                 }
+                                mView.loadSuccess(newsList)
                             }
-                        } else {
-                            mView.loadError()
                         }
-
                     }
                 })
     }

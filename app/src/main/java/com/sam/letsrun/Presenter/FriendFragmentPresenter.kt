@@ -50,15 +50,11 @@ class FriendFragmentPresenter {
                     }
 
                     override fun onResponse(call: Call<SocketResponse>?, response: Response<SocketResponse>?) {
-                        if (response != null) {
-                            val addFriendResponse = response.body() as SocketResponse
-                            when (addFriendResponse.msg) {
-                                Const.ADD_FRIEND_SUCCESS -> mView.addFriendSuccess()
+                        val addFriendResponse = response?.body() as SocketResponse
+                        when (addFriendResponse.msg) {
+                            Const.ADD_FRIEND_SUCCESS -> mView.addFriendSuccess()
 
-                                Const.UNKNOWN_ERROR -> mView.addFriendError()
-                            }
-                        } else {
-                            mView.addFriendError()
+                            Const.UNKNOWN_ERROR -> mView.addFriendError()
                         }
                     }
                 })
@@ -74,15 +70,11 @@ class FriendFragmentPresenter {
                     }
 
                     override fun onResponse(call: Call<LoadFriendListResponse>?, response: Response<LoadFriendListResponse>?) {
-                        if (response != null) {
-                            val loadFriendListResponse = response.body() as LoadFriendListResponse
-                            when (loadFriendListResponse.msg) {
-                                Const.UNKNOWN_ERROR -> mView.loadFriendListError()
+                        val loadFriendListResponse = response?.body() as LoadFriendListResponse
+                        when (loadFriendListResponse.msg) {
+                            Const.UNKNOWN_ERROR -> mView.loadFriendListError()
 
-                                Const.LOAD_FRIEND_LIST_SUCCESS -> mView.loadFriendListSuccess(loadFriendListResponse.friendList)
-                            }
-                        } else {
-                            mView.loadFriendListError()
+                            Const.LOAD_FRIEND_LIST_SUCCESS -> mView.loadFriendListSuccess(loadFriendListResponse.friendList)
                         }
                     }
                 })

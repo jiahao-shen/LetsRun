@@ -4,7 +4,6 @@ package com.sam.letsrun.Fragment
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -15,9 +14,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
+import com.blankj.utilcode.util.ConvertUtils
+import com.blankj.utilcode.util.KeyboardUtils
 import com.orhanobut.logger.Logger
 import com.sam.letsrun.Custom.Const
-import com.sam.letsrun.Custom.MyUtils
 import com.sam.letsrun.R
 import com.sam.letsrun.View.RegisterView
 import com.yalantis.ucrop.UCrop
@@ -26,7 +26,6 @@ import com.yanzhenjie.permission.Permission
 import kotlinx.android.synthetic.main.fragment_register_c.*
 import org.jetbrains.anko.support.v4.toast
 import java.io.File
-
 
 /**
  * 注册界面C
@@ -60,18 +59,21 @@ class RegisterFragmentC : Fragment() {
                     .show()
         }
 
+        userNameText.setOnEditorActionListener { v, _, _ ->
+            KeyboardUtils.hideSoftInput(v)
+            true
+        }
+
         nextButton.setOnClickListener {
-            if (userName.text.toString() == "") {
+            if (userNameText.text.toString() == "") {
                 toast("用户名不能为空")
             } else {
-                mView.initUserName(userName.text.toString())
+                mView.initUserName(userNameText.text.toString())
+                mView.initImage(ConvertUtils.view2Bitmap(userImageView))
                 mView.nextFragment()
             }
         }
     }
-
-
-
 
     /**
      * 获取SDK卡读写权限
@@ -83,9 +85,6 @@ class RegisterFragmentC : Fragment() {
                     Permission.WRITE_EXTERNAL_STORAGE,
                     Permission.CAMERA
             )
-            .onGranted { permissions ->
-                Logger.d(permissions)
-            }
             .rationale { _, _, executor ->
                 MaterialDialog.Builder(this.context!!)
                         .title("权限相关")
@@ -124,7 +123,6 @@ class RegisterFragmentC : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Logger.i(requestCode.toString())
         when (requestCode) {        //相册回调
             Const.SELECT_IMAGE_ALBUM -> {
                 if (resultCode == RESULT_OK) {
@@ -146,7 +144,6 @@ class RegisterFragmentC : Fragment() {
                         Logger.i(it.toString())
                         userImageView.setImageURI(null)
                         userImageView.setImageURI(it)
-                        mView.initImage(((userImageView.drawable) as BitmapDrawable).bitmap)
                     }
                 }
             }
