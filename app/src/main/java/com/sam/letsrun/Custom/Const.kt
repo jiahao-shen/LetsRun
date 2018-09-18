@@ -11,7 +11,7 @@ class Const {
 
         /*--ADDRESS--*/
         private const val BASE_IP = "120.78.218.59" //阿里云服务器
-        const val BASE_HTTP_ADDRESS = "http://$BASE_IP/AppService/"
+        const val BASE_HTTP_ADDRESS = "http://$BASE_IP/AppService/app/"
         const val BASE_WEBSOCKET_ADDRESS = "ws://$BASE_IP:8000"
 
         /*--TYPE--*/
