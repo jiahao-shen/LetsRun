@@ -30,18 +30,21 @@ interface NetService {
     @POST("LoadInfo.php")
     fun loadInfo(@Part("request") request: String): Call<AdvertisementResponse>
 
-
     @Multipart
     @POST("SearchUser.php")
     fun searchUser(@Part("request") request: String): Call<SearchUserResponse>
 
     @Multipart
     @POST("AddFriendResponse.php")
-    fun addFriendAnswer(@Part("request") request: String): Call<SocketResponse>
+    fun addFriendResponse(@Part("request") request: String): Call<SocketResponse>
 
     @Multipart
     @POST("LoadFriendList.php")
     fun loadFriendList(@Part("request") request: String): Call<LoadFriendListResponse>
+
+    @Multipart
+    @POST("UpdateUserInfo.php")
+    fun updateUserInfo(@Part("request") request: String): Call<UpdateUserInfoResponse>
 
     @GET(Const.NEWS_HTTP_ADDRESS)
     fun loadNews(): Call<NewsResponse>

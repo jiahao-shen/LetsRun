@@ -69,12 +69,11 @@ class FriendService : Service() {
 
         override fun onFailure(webSocket: WebSocket?, t: Throwable?, response: Response?) {
             super.onFailure(webSocket, t, response)
-            Logger.i(t.toString(), response.toString())
+            Logger.e(t.toString(), response.toString())
         }
 
         override fun onMessage(webSocket: WebSocket?, text: String?) {
             super.onMessage(webSocket, text)
-            Logger.json(text)
 
             val response = Gson().fromJson(text, SocketResponse::class.java)
             when (response.msg) {

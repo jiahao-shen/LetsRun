@@ -1,5 +1,6 @@
 package com.sam.letsrun.Presenter
 
+import com.blankj.utilcode.util.NetworkUtils
 import com.google.gson.Gson
 import com.orhanobut.logger.Logger
 import com.sam.letsrun.Model.News
@@ -18,6 +19,10 @@ class NewsFragmentPresenter {
     lateinit var mView: NewsFragmentView
 
     fun loadNews() {
+        if (!NetworkUtils.isConnected()) {
+            mView.netError()
+            return
+        }
         val service = RetrofitUtils.getService()
         service.loadNews()
                 .enqueue(object : Callback<NewsResponse> {
@@ -26,7 +31,11 @@ class NewsFragmentPresenter {
                     }
 
                     override fun onResponse(call: Call<NewsResponse>?, response: Response<NewsResponse>?) {
-                        val newsResponse = response?.body() as NewsResponse
+                        if (response == null) {
+                            mView.loadError()
+                            return
+                        }
+                        val newsResponse = response.body() as NewsResponse
                         when (newsResponse.error_code) {
                             0 -> {
                                 val newsList = newsResponse.result.data

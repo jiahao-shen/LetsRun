@@ -149,7 +149,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
 
         val rootView: View = searchUserDialog.customView!!     //获取子布局控件
 
-        val searchImagView: CircleImageView = rootView.findViewById(R.id.search_image_view)
+        val searchImageView: CircleImageView = rootView.findViewById(R.id.search_image_view)
         val searchUserName: TextView = rootView.findViewById(R.id.search_user_name)
         val searchAddInfo: MaterialEditText = rootView.findViewById(R.id.search_add_info)
         val searchAddUserButton: BootstrapButton = rootView.findViewById(R.id.search_add_user_button)
@@ -172,7 +172,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
                         .load(MyUtils.getImageUrl(user.telephone))
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .placeholder(R.drawable.ic_user_image)
-                        .into(searchImagView)
+                        .into(searchImageView)
 
                 searchUserName.text = user.username
                 searchAddInfo.visibility = View.GONE
@@ -182,7 +182,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
             }
 
             Const.USER_NOT_EXIST -> {       //搜索的用户不存在
-                searchImagView.setImageResource(R.drawable.ic_user_image)
+                searchImageView.setImageResource(R.drawable.ic_user_image)
                 searchUserName.text = "???"
                 searchAddInfo.visibility = View.GONE
                 searchAddUserButton.text = "用户不存在"
@@ -195,7 +195,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
                         .load(MyUtils.getImageUrl(response!!.telephone!!))
                         .placeholder(R.drawable.ic_user_image)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(searchImagView)
+                        .into(searchImageView)
                 searchUserName.text = response.username
                 searchAddInfo.visibility = View.GONE
                 searchAddUserButton.visibility = View.VISIBLE
@@ -209,7 +209,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
                         .load(MyUtils.getImageUrl(response!!.telephone!!))
                         .placeholder(R.drawable.ic_user_image)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(searchImagView)
+                        .into(searchImageView)
                 searchUserName.text = response.username
                 searchAddInfo.visibility = View.VISIBLE
                 searchAddUserButton.visibility = View.VISIBLE
@@ -287,14 +287,14 @@ class FriendFragment : Fragment(), FriendFragmentView {
         toast("添加成功")
     }
 
-    override fun addFriendError() {     //好友申请回复失败
+    override fun unKnownError() {     //好友申请回复失败
         toast("未知错误,请稍后再试")
         friendRequestList = ArrayList()
         friendRequestList.addAll(tempList)      //如果失败从temp中重新取出
     }
 
     override fun loadFriendListError() {
-        toast("网络异常,请稍后再试")
+        toast("网络异常,请检查")
         friendRefreshLayout.finishRefresh(false)
     }
 
@@ -307,5 +307,9 @@ class FriendFragment : Fragment(), FriendFragmentView {
         decoration.setDrawable(ContextCompat.getDrawable(this.context!!, R.drawable.friend_list_decoration)!!)
         friendRecyclerView.addItemDecoration(decoration)
         friendRefreshLayout.finishRefresh(true)
+    }
+
+    override fun netError() {
+        toast("网络异常,请检查")
     }
 }// Required empty public constructor

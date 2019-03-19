@@ -10,4 +10,6 @@ interface NewsFragmentView {
     fun loadSuccess(newsList: ArrayList<News>)
 
     fun loadError()
+
+    fun netError()
 }

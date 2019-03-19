@@ -3,6 +3,7 @@ package com.sam.letsrun.Presenter
 import android.content.Context
 import cn.smssdk.EventHandler
 import cn.smssdk.SMSSDK
+import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.google.gson.Gson
 import com.mob.MobSDK
@@ -46,21 +47,22 @@ class RegisterFragmentPresenter {
      * @param telephone
      * @param code
      */
-    fun checkCode(telephone: String, code: String) {
-        when {
-            telephone == "" -> {
-                mView.telephoneNotNull()
-            }
-            !RegexUtils.isMobileExact(telephone) -> {
-                mView.telephoneNotValid()
-            }
-            code == "" -> {
-                mView.codeNotNull()
-            }
-            else -> {
-                mView.codeCheckSuccess()
-//                SMSSDK.submitVerificationCode("86", telephone, code)
-            }
+    fun checkCode(telephone: String, code: String) = when {
+        !NetworkUtils.isConnected() -> {
+            mView.netError()
+        }
+        telephone == "" -> {
+            mView.telephoneNotNull()
+        }
+        !RegexUtils.isMobileExact(telephone) -> {
+            mView.telephoneNotValid()
+        }
+        code == "" -> {
+            mView.codeNotNull()
+        }
+        else -> {
+            mView.codeCheckSuccess()
+//            SMSSDK.submitVerificationCode("86", telephone, code)
         }
     }
 
@@ -110,31 +112,35 @@ class RegisterFragmentPresenter {
      * @param telephone
      */
     private fun checkPhone(telephone: String) {
+        if (!NetworkUtils.isConnected()) {
+            mView.netError()
+            return
+        }
         val service = RetrofitUtils.getService()
         val request = hashMapOf("msg" to Const.CHECK_PHONE, "telephone" to telephone)
         service.checkPhone(Gson().toJson(request))
                 .enqueue(object : Callback<CheckPhoneResponse> {
                     override fun onFailure(call: Call<CheckPhoneResponse>?, t: Throwable?) {
-                        mView.netError()
+                        mView.unKnownError()
                     }
 
                     override fun onResponse(call: Call<CheckPhoneResponse>?, response: Response<CheckPhoneResponse>?) {
-                        if (response != null) {
-                            val result = response.body() as CheckPhoneResponse
-                            Logger.json(Gson().toJson(result))
-                            when (result.msg) {
-                                Const.TELEPHONE_NOT_EXIST -> {
-                                    SMSSDK.getVerificationCode("86", telephone)
-                                }
-                                Const.TELEPHONE_ALREADY_EXIST -> {
-                                    mView.telephoneAlreadyExist()
-                                }
-                                Const.UNKNOWN_ERROR -> {
-                                    mView.unKnownError()
-                                }
-                            }
-                        } else {
+                        if (response == null) {
                             mView.unKnownError()
+                            return
+                        }
+                        val result = response.body() as CheckPhoneResponse
+                        Logger.json(Gson().toJson(result))
+                        when (result.msg) {
+                            Const.TELEPHONE_NOT_EXIST -> {
+//                                SMSSDK.getVerificationCode("86", telephone)
+                            }
+                            Const.TELEPHONE_ALREADY_EXIST -> {
+                                mView.telephoneAlreadyExist()
+                            }
+                            Const.UNKNOWN_ERROR -> {
+                                mView.unKnownError()
+                            }
                         }
                     }
                 })

@@ -11,4 +11,6 @@ interface AdvertisementView {
 
     fun loadSuccess(user: User)
 
+    fun netError()
+
 }

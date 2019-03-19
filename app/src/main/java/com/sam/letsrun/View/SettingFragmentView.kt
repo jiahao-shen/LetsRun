@@ -1,5 +1,7 @@
 package com.sam.letsrun.View
 
+import com.sam.letsrun.Model.User
+
 interface SettingFragmentView {
 
     fun logoutSuccess()
@@ -7,4 +9,10 @@ interface SettingFragmentView {
     fun logoutFailed()
 
     fun unKnownError()
+
+    fun netError()
+
+    fun updateUserInfoFailed()
+
+    fun updateUserInfoSuccess(newUser: User)
 }

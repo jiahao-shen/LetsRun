@@ -8,15 +8,18 @@ import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
+import com.beardedhen.androidbootstrap.font.MaterialIcons
 import com.blankj.utilcode.util.KeyboardUtils
 import com.suke.widget.SwitchButton
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
+import com.orhanobut.logger.Logger
 import com.rengwuxian.materialedittext.MaterialEditText
 import com.sam.letsrun.Activity.LoginActivity
 import com.sam.letsrun.Custom.MyUtils
@@ -32,6 +35,7 @@ import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.toast
 import kotlin.math.max
+
 /**
  * 设置Fragment
  */
@@ -55,15 +59,31 @@ class SettingFragment : Fragment(), SettingFragmentView {
         initUser()
         presenter.mView = this
 
+        userSignatureText.setOnClickListener {
+            val signatureDialog = MaterialDialog.Builder(context!!)
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .inputRange(0, 255)
+                    .input("设置您的个性签名", "") { _, input ->
+                        val newUser = user.copy()
+                        newUser.signature = input.toString()
+                        presenter.updateUserInfo(newUser, token)
+                    }
+                    .positiveText("保存")
+                    .negativeText("取消")
+                    .build()
+            signatureDialog.show()
+        }
+
         userInformationLayout.setOnClickListener {
-//            TODO("修改用户信息")
+            //            TODO("修改用户信息")
         }
 
         userSportHistoryLayout.setOnClickListener {
-//            TODO("展示运动历史记录")
+            //            TODO("展示运动历史记录")
         }
 
-        userSettingLayout.setOnClickListener {      //设置
+        userSettingLayout.setOnClickListener {
+            //设置
 //            TODO("添加设置栏目")
             val settingDialog = MaterialDialog.Builder(context!!)
                     .title("设置")
@@ -71,11 +91,11 @@ class SettingFragment : Fragment(), SettingFragmentView {
                     .customView(R.layout.dialog_setting, true)
                     .positiveText("保存")
                     .onPositive { dialog, which ->
-//                        TODO("保存事件")
+                        //                        TODO("保存事件")
                     }
                     .negativeText("取消")
                     .onNegative { dialog, which ->
-//                        TODO("取消事件")
+                        //                        TODO("取消事件")
                     }
                     .build()
 
@@ -101,9 +121,14 @@ class SettingFragment : Fragment(), SettingFragmentView {
             settingDialog.show()
         }
 
-        appInfoLayout.setOnClickListener{}
+        appInfoLayout.setOnClickListener {
+            MaterialDialog.Builder(context!!)
+                    .customView(R.layout.app_about, false)
+                    .show()
+        }
 
-        logoutButton.setOnClickListener {       //退出登录
+        logoutButton.setOnClickListener {
+            //退出登录
             presenter.logout(user.telephone, token)
         }
 
@@ -116,6 +141,43 @@ class SettingFragment : Fragment(), SettingFragmentView {
         token = sharedPreferences.getString("token", "")
         user = Gson().fromJson(sharedPreferences.getString("user", ""), User::class.java)
 
+        setUserInfo()
+    }
+
+    override fun logoutSuccess() {
+        toast("退出成功")
+        sharedPreferencesEditor.putString("token", "")
+                .putString("user", "")
+                .commit()
+        startActivity(intentFor<LoginActivity>().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+        activity?.finish()
+    }
+
+    override fun logoutFailed() {
+        toast("网络异常,请稍后再试")
+    }
+
+    override fun unKnownError() {
+        toast("未知错误,请稍后再试")
+    }
+
+    override fun netError() {
+        toast("网络异常,请检查")
+    }
+
+    override fun updateUserInfoFailed() {
+        toast("更新失败,请稍后再试")
+    }
+
+    override fun updateUserInfoSuccess(newUser: User) {
+        user = newUser
+        sharedPreferencesEditor.putString("user", Gson().toJson(user))
+        sharedPreferencesEditor.commit()
+
+        setUserInfo()
+    }
+
+    private fun setUserInfo() {
         GlideApp.with(this)
                 .load(MyUtils.getImageUrl(user.telephone))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -137,24 +199,6 @@ class SettingFragment : Fragment(), SettingFragmentView {
         } else {
             userGenderView.imageResource = R.drawable.ic_sex_woman_checked
         }
-
-    }
-
-    override fun logoutSuccess() {
-        toast("退出成功")
-        sharedPreferencesEditor.putString("token", "")
-                .putString("user", "")
-                .commit()
-        startActivity(intentFor<LoginActivity>().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-        activity?.finish()
-    }
-
-    override fun logoutFailed() {
-        toast("网络异常,请稍后再试")
-    }
-
-    override fun unKnownError() {
-        toast("未知错误,请稍后再试")
     }
 
 

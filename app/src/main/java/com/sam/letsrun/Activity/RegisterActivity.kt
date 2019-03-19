@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.widget.RadioButton
 import com.blankj.utilcode.util.ImageUtils
+import com.blankj.utilcode.util.Utils
 import com.google.gson.Gson
 import com.sam.letsrun.Adapter.MyFragmentAdapter
 import com.sam.letsrun.Custom.Const
@@ -69,6 +70,7 @@ class RegisterActivity : AppCompatActivity(), RegisterView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+        Utils.init(application)
 
         presenter.mView = this
 

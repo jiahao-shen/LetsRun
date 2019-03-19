@@ -1,5 +1,6 @@
 package com.sam.letsrun.Presenter
 
+import com.blankj.utilcode.util.NetworkUtils
 import com.google.gson.Gson
 import com.orhanobut.logger.Logger
 import com.sam.letsrun.Custom.Const
@@ -17,19 +18,27 @@ class FriendFragmentPresenter {
 
     lateinit var mView: FriendFragmentView
 
-    fun searchUser(telephone: String, token: String, query: String) {
-        if (telephone == query) {
+    fun searchUser(telephone: String, token: String, query: String) = when {
+        !NetworkUtils.isConnected() -> {
+            mView.netError()
+        }
+        telephone == query -> {
             mView.showSearchResult(Const.USER_IS_SELF, null)
-        } else {
+        }
+        else -> {
             val service = RetrofitUtils.getService()
             val request = hashMapOf("telephone" to telephone, "token" to token, "query" to query)
             service.searchUser(Gson().toJson(request))
                     .enqueue(object : Callback<SearchUserResponse> {
                         override fun onFailure(call: Call<SearchUserResponse>?, t: Throwable?) {
-                            mView.addFriendError()
+                            mView.unKnownError()
                         }
 
-                        override fun onResponse(call: Call<SearchUserResponse>?, response: Response<SearchUserResponse>) {
+                        override fun onResponse(call: Call<SearchUserResponse>?, response: Response<SearchUserResponse>?) {
+                            if (response == null) {
+                                mView.unKnownError()
+                                return
+                            }
                             val searchUserResponse = response.body() as SearchUserResponse
                             Logger.json(Gson().toJson(searchUserResponse))
 
@@ -40,27 +49,39 @@ class FriendFragmentPresenter {
     }
 
     fun addFriendAnswer(telephone: String, token: String, msg: Int, list: ArrayList<HashMap<String, String>>) {
+        if (!NetworkUtils.isConnected()) {
+            mView.netError()
+            return
+        }
         val addFriendAnswer = AddFriendResponse(telephone, token, msg, list)
 
         val service = RetrofitUtils.getService()
-        service.addFriendAnswer(Gson().toJson(addFriendAnswer))
+        service.addFriendResponse(Gson().toJson(addFriendAnswer))
                 .enqueue(object : Callback<SocketResponse> {
                     override fun onFailure(call: Call<SocketResponse>?, t: Throwable?) {
-                        mView.addFriendError()
+                        mView.unKnownError()
                     }
 
                     override fun onResponse(call: Call<SocketResponse>?, response: Response<SocketResponse>?) {
-                        val addFriendResponse = response?.body() as SocketResponse
+                        if (response == null) {
+                            mView.unKnownError()
+                            return
+                        }
+                        val addFriendResponse = response.body() as SocketResponse
                         when (addFriendResponse.msg) {
                             Const.ADD_FRIEND_SUCCESS -> mView.addFriendSuccess()
 
-                            Const.UNKNOWN_ERROR -> mView.addFriendError()
+                            Const.UNKNOWN_ERROR -> mView.unKnownError()
                         }
                     }
                 })
     }
 
     fun loadFriendList(telephone: String, token: String) {
+        if (!NetworkUtils.isConnected()) {
+            mView.netError()
+            return
+        }
         val service = RetrofitUtils.getService()
         val request = hashMapOf("telephone" to telephone, "token" to token)
         service.loadFriendList(Gson().toJson(request))
@@ -70,7 +91,11 @@ class FriendFragmentPresenter {
                     }
 
                     override fun onResponse(call: Call<LoadFriendListResponse>?, response: Response<LoadFriendListResponse>?) {
-                        val loadFriendListResponse = response?.body() as LoadFriendListResponse
+                        if (response == null) {
+                            mView.unKnownError()
+                            return
+                        }
+                        val loadFriendListResponse = response.body() as LoadFriendListResponse
                         when (loadFriendListResponse.msg) {
                             Const.UNKNOWN_ERROR -> mView.loadFriendListError()
 

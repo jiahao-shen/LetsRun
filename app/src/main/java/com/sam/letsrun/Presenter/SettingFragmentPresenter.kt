@@ -1,8 +1,11 @@
 package com.sam.letsrun.Presenter
 
+import com.blankj.utilcode.util.NetworkUtils
 import com.google.gson.Gson
 import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.Model.LogoutResponse
+import com.sam.letsrun.Model.UpdateUserInfoResponse
+import com.sam.letsrun.Model.User
 import com.sam.letsrun.View.SettingFragmentView
 import com.sam.runapp.Net.RetrofitUtils
 import retrofit2.Call
@@ -22,6 +25,10 @@ class SettingFragmentPresenter {
      * @param token
      */
     fun logout(telephone: String, token: String) {
+        if (!NetworkUtils.isConnected()) {
+            mView.netError()
+            return
+        }
         val service = RetrofitUtils.getService()
         val request = hashMapOf("telephone" to telephone, "token" to token)
         service.logout(Gson().toJson(request))
@@ -31,7 +38,11 @@ class SettingFragmentPresenter {
                     }
 
                     override fun onResponse(call: Call<LogoutResponse>?, response: Response<LogoutResponse>?) {
-                        val logoutResponse = response?.body() as LogoutResponse
+                        if (response == null) {
+                            mView.logoutFailed()
+                            return
+                        }
+                        val logoutResponse = response.body() as LogoutResponse
                         when (logoutResponse.msg) {
                             Const.LOGOUT_SUCCESS -> mView.logoutSuccess()
 
@@ -41,5 +52,36 @@ class SettingFragmentPresenter {
                         }
                     }
                 })
+    }
+
+    fun updateUserInfo(user: User, token: String) {
+        if (!NetworkUtils.isConnected()) {
+            mView.netError()
+            return
+        }
+        val service = RetrofitUtils.getService()
+        val request = hashMapOf("token" to token, "user" to user)
+        service.updateUserInfo(Gson().toJson(request))
+                .enqueue(object : Callback<UpdateUserInfoResponse> {
+                    override fun onFailure(call: Call<UpdateUserInfoResponse>, t: Throwable) {
+                        mView.updateUserInfoFailed()
+                    }
+
+                    override fun onResponse(call: Call<UpdateUserInfoResponse>, response: Response<UpdateUserInfoResponse>?) {
+                        if (response == null) {
+                            mView.updateUserInfoFailed()
+                            return
+                        }
+                        val updateUserInfoResponse = response.body() as UpdateUserInfoResponse
+                        when (updateUserInfoResponse.msg) {
+                            Const.UNKNOWN_ERROR -> mView.unKnownError()
+
+                            Const.UPDATE_INFO_FAILED -> mView.updateUserInfoFailed()
+
+                            Const.UPDATE_INFO_SUCCESS -> mView.updateUserInfoSuccess(user)
+                        }
+                    }
+                })
+
     }
 }

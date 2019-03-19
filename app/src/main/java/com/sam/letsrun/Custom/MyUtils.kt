@@ -11,6 +11,6 @@ import java.security.MessageDigest
  */
 object MyUtils {
 
-    fun getImageUrl(name: String) = "${Const.BASE_HTTP_ADDRESS}/UserImage/$name.jpg"
+    fun getImageUrl(name: String) = "${Const.BASE_HTTP_ADDRESS}UserImage/$name.jpg"
 
 }

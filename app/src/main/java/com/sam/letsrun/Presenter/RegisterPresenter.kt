@@ -4,6 +4,7 @@ import android.app.Activity
 import android.net.Uri
 import android.util.Log
 import com.blankj.utilcode.util.EncryptUtils
+import com.blankj.utilcode.util.NetworkUtils
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.orhanobut.logger.Logger
@@ -30,6 +31,10 @@ class RegisterPresenter {
     lateinit var mView: RegisterView
 
     fun register(telephone: String, password: String, userName: String, gender: String, birthday: String?, blood: String?, height: Int?, weight: Int?) {
+        if (!NetworkUtils.isConnected()) {
+            mView.netError()
+            return
+        }
         val service = RetrofitUtils.getService()
 
         val user = User(telephone, EncryptUtils.encryptMD5ToString(password), userName, null, null, birthday, gender, blood, height, weight)
@@ -40,12 +45,15 @@ class RegisterPresenter {
         service.register(GsonBuilder().setDateFormat("yyyy-MM-dd").create().toJson(request), fileBody)
                 .enqueue(object : Callback<RegisterResponse> {
                     override fun onFailure(call: Call<RegisterResponse>?, t: Throwable?) {
-                        mView.netError()
-                        Log.i("error", t.toString())
+                        mView.unKnownError()
                     }
 
                     override fun onResponse(call: Call<RegisterResponse>?, response: Response<RegisterResponse>?) {
-                        val result = response?.body() as RegisterResponse
+                        if (response == null) {
+                            mView.unKnownError()
+                            return
+                        }
+                        val result = response.body() as RegisterResponse
                         when (result.msg) {
                             Const.REGISTER_SUCCESS -> {
                                 result.token?.let { mView.registerSuccess(it) }

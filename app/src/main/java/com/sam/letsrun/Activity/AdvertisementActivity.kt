@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.blankj.utilcode.util.Utils
 import com.google.gson.Gson
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
@@ -15,6 +16,7 @@ import com.sam.letsrun.R
 import com.sam.letsrun.View.AdvertisementView
 import kotlinx.android.synthetic.main.activity_advertisement.*
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 
 
 /**
@@ -34,6 +36,8 @@ class AdvertisementActivity : AppCompatActivity(), AdvertisementView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_advertisement)
+        Utils.init(application)
+
         Logger.addLogAdapter(AndroidLogAdapter())   //Logger初始化
         initUser()
         presenter.mView = this      //view一定不要忘记初始化
@@ -50,7 +54,7 @@ class AdvertisementActivity : AppCompatActivity(), AdvertisementView {
             loadFailed()
         } else {        //token存在则获取user对象
             user = Gson().fromJson(sharedPreferences.getString("user", ""), User::class.java)
-            presenter.loadInformation(user.telephone, token)
+            presenter.loadInformation(user, token)
         }
 
     }
@@ -73,6 +77,14 @@ class AdvertisementActivity : AppCompatActivity(), AdvertisementView {
         Logger.json(Gson().toJson(user))
         sharedPreferencesEditor.putString("user", Gson().toJson(user)).commit()     //保存新的user信息到本地
         startActivity<MainActivity>()   //跳转到主界面
+    }
+
+    /**
+     * 网络错误
+     */
+    override fun netError() {
+        toast("网络异常,请检查")
+        startActivity<MainActivity>()
     }
 
 }

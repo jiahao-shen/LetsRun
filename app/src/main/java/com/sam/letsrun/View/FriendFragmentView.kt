@@ -8,7 +8,7 @@ import com.sam.letsrun.Model.SearchUserResponse
  */
 interface FriendFragmentView {
 
-    fun addFriendError()
+    fun unKnownError()
 
     fun showSearchResult(msg: Int, response: SearchUserResponse?)
 
@@ -17,5 +17,7 @@ interface FriendFragmentView {
     fun loadFriendListError()
 
     fun loadFriendListSuccess(list: ArrayList<Friend>)
+
+    fun netError()
 
 }

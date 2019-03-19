@@ -70,4 +70,8 @@ class NewsFragment : Fragment(), NewsFragmentView {
         toast("加载失败,请稍后再试")
         newsRefreshLayout.finishRefresh(false)
     }
+
+    override fun netError() {
+        toast("网络异常,请检查")
+    }
 }// Required empty public constructor
