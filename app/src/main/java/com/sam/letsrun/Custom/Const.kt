@@ -15,6 +15,7 @@ class Const {
 //        const val BASE_WEBSOCKET_ADDRESS = "ws://$BASE_IP:8000"
         private const val BASE_IP = "192.168.229.238"
         const val BASE_HTTP_ADDRESS = "http://$BASE_IP/LetsRunService/app/"
+        const val IMAGE_ADDRESS = "http://$BASE_IP/LetsRunService/UserImage/"
         const val BASE_WEBSOCKET_ADDRESS = "ws://$BASE_IP:8000"
 
         /*--TYPE--*/
@@ -72,5 +73,6 @@ class Const {
         const val SELECT_IMAGE_ALBUM = 102
 
         const val NEWS_HTTP_ADDRESS = "http://v.juhe.cn/toutiao/index?type=tiyu&key=1b42a673db5d082403746c1c670ac6ac"
+
     }
 }

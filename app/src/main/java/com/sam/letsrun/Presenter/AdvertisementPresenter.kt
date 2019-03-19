@@ -2,6 +2,7 @@ package com.sam.letsrun.Presenter
 
 import com.blankj.utilcode.util.NetworkUtils
 import com.google.gson.Gson
+import com.orhanobut.logger.Logger
 import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.Model.AdvertisementResponse
 import com.sam.letsrun.Model.User
@@ -46,6 +47,7 @@ class AdvertisementPresenter {
                                 mView.loadFailed()
                                 return
                             }
+                            Logger.e(response.body().toString())
                             val myResponse = response.body() as AdvertisementResponse
                             when (myResponse.msg) {
                                 //失败

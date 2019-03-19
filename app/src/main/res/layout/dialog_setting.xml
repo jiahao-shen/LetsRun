@@ -21,7 +21,7 @@
             tools:ignore="VectorDrawableCompat" />
 
         <TextView
-            android:text="开启定位"
+            android:text="开启记步"
             android:layout_weight="1"
             android:layout_marginLeft="10dp"
             android:textSize="20sp"

@@ -13,4 +13,6 @@ data class User(val telephone: String,
                 var blood: String? = null,
                 var height: Int? = null,
                 var weight: Int? = null,
-                var signature: String? = null)
+                var signature: String? = null,
+                var isCountStep: Int = 1,
+                var goalSteps: Int = 5000)

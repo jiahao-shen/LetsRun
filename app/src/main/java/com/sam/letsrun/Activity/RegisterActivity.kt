@@ -11,6 +11,7 @@ import android.widget.RadioButton
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.Utils
 import com.google.gson.Gson
+import com.orhanobut.logger.Logger
 import com.sam.letsrun.Adapter.MyFragmentAdapter
 import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.Custom.MyUtils

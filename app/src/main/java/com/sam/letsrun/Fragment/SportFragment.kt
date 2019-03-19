@@ -20,6 +20,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
+import org.jetbrains.anko.support.v4.toast
 
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -96,5 +97,13 @@ class SportFragment : Fragment() {
         super.onDestroy()
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this)
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser) {
+
+            showSportProgress()
+        }
     }
 }// Required empty public constructor

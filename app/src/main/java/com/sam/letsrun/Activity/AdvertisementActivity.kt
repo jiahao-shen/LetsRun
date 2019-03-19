@@ -74,7 +74,7 @@ class AdvertisementActivity : AppCompatActivity(), AdvertisementView {
      */
     override fun loadSuccess(user: User) {
         progressBar.visibility = View.GONE
-        Logger.json(Gson().toJson(user))
+        Logger.e(Gson().toJson(user))
         sharedPreferencesEditor.putString("user", Gson().toJson(user)).commit()     //保存新的user信息到本地
         startActivity<MainActivity>()   //跳转到主界面
     }

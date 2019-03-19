@@ -8,6 +8,7 @@ import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import com.sam.letsrun.Model.AddFriendRequest
 import com.sam.letsrun.Model.SocketResponse
+import com.sam.letsrun.Model.User
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,16 +25,11 @@ import java.util.*
 class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
-        // Context of the app under test.
-        Logger.addLogAdapter(AndroidLogAdapter())
-        val text = ""
-        val list = Gson().fromJson<ArrayList<AddFriendRequest>>(text,
-                object : TypeToken<ArrayList<AddFriendRequest>>() {}.type)
-        list.add(AddFriendRequest("123", "fsdhfkj", "fdshkjh", "fdshjfsdhkj"))
-        Logger.json(list.toString())
+        Logger.addLogAdapter(AndroidLogAdapter())   //Logger初始化
 
-//        Logger.json(Gson().toJson(info))
+        val user = User("13706212370", "", "shenjiahao")
 
+        print(Gson().toJson(user))
     }
 
 }

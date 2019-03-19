@@ -57,7 +57,7 @@ class RegisterFragmentF : Fragment() {
             picker.show()
             picker.setOnItemPickListener { _, item ->
                 weightText.setText("${item}kg")
-                mView.initHeight(item.toInt())
+                mView.initWeight(item.toInt())
             }
         }
 

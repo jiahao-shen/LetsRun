@@ -59,6 +59,7 @@ class SportActivity : AppCompatActivity(), DistanceSearch.OnDistanceSearchListen
     private var polylineOptions = PolylineOptions()
     private lateinit var currentLocation: LatLng    //当前定位座标
     private var preLocation: LatLng? = null     //前一个定位座标
+
     private var totalDistance = 0.00f       //运动总距离
 
     /**

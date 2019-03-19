@@ -1,10 +1,8 @@
 package com.sam.letsrun.Service
 
 import android.app.Service
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -21,7 +19,6 @@ import com.amap.api.services.weather.WeatherSearchQuery
 import com.google.gson.Gson
 import com.orhanobut.logger.Logger
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 import java.util.*
 
 /**
@@ -55,16 +52,15 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
     private var timeOfThisPeak: Long = 0//此次波峰时间
     private var gravityOld: Long = 0//过去的总加速度
     private var threadValue = 2.0f //阀值的初始值
-    private var mCount = 0//总步数
-    private var speed: Double = 0.0   //当前速度
-    private var sportStatus: Int = 0
-    private var isSport = true    //是否开启运动界面
     private var lastTime: Long = 0
-
     private val threadList = FloatArray(1000)
     private val waveList = FloatArray(1000)
     private var countOfThread = 0
     private var countOfWaves = 0
+
+    private var totalSteps = 0  //总步数
+    private var speed: Double = 0.0   //当前速度
+    private var sportStatus: Int = 0    //运动状态
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -118,7 +114,6 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
 
     /**
      * 好了,从下往下的算法跟我一点关系都没有
-     * TODO("这个算法不是我写的!!!!争取自己看懂")
      */
     private fun initStep() {
         sManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager    //传感器管理器
@@ -133,7 +128,7 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
         val gravityNew = Math.sqrt((oriValues[0] * oriValues[0] + oriValues[1] * oriValues[1] + oriValues[2] * oriValues[2]).toDouble()).toLong()
         detectorNewStep(gravityNew)
 
-        if (isSport && countOfThread >= 30 && countOfWaves >= 30) { //在运动且组数大于20则判断一次
+        if (countOfThread >= 30 && countOfWaves >= 30) { //在运动且组数大于20则判断一次
             judge()
         }
     }
@@ -171,12 +166,11 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
 
         if (tempCount >= 10) {
             if (tempCount == 10) {
-                mCount += 10
+                totalSteps += 10
             } else {
-                mCount++
+                totalSteps++
             }
         }
-
         lastTime = thisTime
     }
 
@@ -193,7 +187,7 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
         }
         return if (!isDirectionUp && lastStatus && continueUpFormerCount >= 2 && oldValue >= 20 && oldValue <= 50) {    //判断波峰的条件，当图像一直增长，突然开始增加时，上个点认为是波峰，参数的变化请注意
             peakOfWave = oldValue
-            if (isSport && countOfWaves <= 500) {   //在运动的时候才记录数据
+            if (countOfWaves <= 500) {   //在运动的时候才记录数据
                 waveList[countOfWaves++] = peakOfWave
             }
             true
@@ -208,7 +202,7 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
     private fun peakValleyThread(value: Float): Float {
         var tempThread = threadValue
 
-        if (isSport && countOfThread <= 500) {      //在运动的时候才记录数据
+        if (countOfThread <= 500) {      //在运动的时候才记录数据
             threadList[countOfThread++] = value
         }
 

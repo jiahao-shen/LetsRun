@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.Utils
+import com.dinuscxj.progressbar.UnitUtils
 import com.google.gson.Gson
 import com.gyf.barlibrary.ImmersionBar
 import com.orhanobut.logger.Logger
@@ -26,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 
 /**
@@ -50,7 +53,7 @@ class MainActivity : AppCompatActivity(), MainView {
     private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
 
     private lateinit var token: String
-    private lateinit var user: User
+    lateinit var user: User
 
     private var friendService: Intent? = null       //监听好友添加等
     private var sportService: Intent? = null        //定位和计步服务
@@ -78,6 +81,8 @@ class MainActivity : AppCompatActivity(), MainView {
         sharedPreferencesEditor = sharedPreferences.edit()
         token = sharedPreferences.getString("token", "")
         user = Gson().fromJson(sharedPreferences.getString("user", ""), User::class.java)
+
+        Logger.e(sharedPreferences.getString("user", ""))
     }
 
     /**
