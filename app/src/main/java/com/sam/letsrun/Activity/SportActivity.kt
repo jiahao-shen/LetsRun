@@ -3,6 +3,8 @@ package com.sam.letsrun.Activity
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.location.Location
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
@@ -30,6 +32,7 @@ import com.blankj.utilcode.util.Utils
 import com.gyf.barlibrary.ImmersionBar
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
+import com.sam.letsrun.Custom.MyUtils
 import com.sam.letsrun.R
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.Permission
@@ -62,6 +65,9 @@ class SportActivity : AppCompatActivity(), DistanceSearch.OnDistanceSearchListen
 
     private var totalDistance = 0.00f       //运动总距离
 
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferenceEditor: SharedPreferences.Editor
+
     /**
      * 格式化参数
      */
@@ -83,6 +89,10 @@ class SportActivity : AppCompatActivity(), DistanceSearch.OnDistanceSearchListen
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sport)
         Logger.addLogAdapter(AndroidLogAdapter())
+
+        sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+        sharedPreferenceEditor = sharedPreferences.edit()
+
         mMapView.onCreate(savedInstanceState)
         Utils.init(this)
 
@@ -168,6 +178,10 @@ class SportActivity : AppCompatActivity(), DistanceSearch.OnDistanceSearchListen
                     .content("您确定要结束运动吗?未完成的记录不会被保存")
                     .positiveText("确定")
                     .onPositive { _, _ ->
+                        val temp = sharedPreferences.getInt("${MyUtils.getCurrentDate()}:distance", 0)
+                        sharedPreferenceEditor.putFloat("${MyUtils.getCurrentDate()}:distance", temp + totalDistance)
+                        sharedPreferenceEditor.apply()
+
                         this.finish()
                     }
                     .negativeText("取消")

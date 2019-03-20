@@ -7,26 +7,6 @@ import android.graphics.Bitmap
  */
 interface RegisterView {
 
-    fun nextFragment()
-
-    fun initTelephone(data: String)
-
-    fun initPassword(data: String)
-
-    fun initUserName(data: String)
-
-    fun initGender(data: String)
-
-    fun initBirthday(data: String)
-
-    fun initBlood(data: String)
-
-    fun initHeight(data: Int)
-
-    fun initWeight(data: Int)
-
-    fun initImage(bitmap: Bitmap)
-
     fun unKnownError()
 
     fun registerSuccess(token: String)

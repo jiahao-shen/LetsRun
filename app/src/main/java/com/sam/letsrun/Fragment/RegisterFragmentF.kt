@@ -2,6 +2,7 @@ package com.sam.letsrun.Fragment
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.Gravity
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cn.qqtheme.framework.picker.NumberPicker
+import com.sam.letsrun.Activity.RegisterActivity
 import com.sam.letsrun.R
 import com.sam.letsrun.View.RegisterView
 
@@ -20,8 +22,12 @@ import kotlinx.android.synthetic.main.fragment_register_f.*
  */
 class RegisterFragmentF : Fragment() {
 
+    private lateinit var registerActivity: RegisterActivity
 
-    lateinit var mView: RegisterView
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        registerActivity = context as RegisterActivity
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register_f, container, false)
@@ -42,7 +48,7 @@ class RegisterFragmentF : Fragment() {
             picker.show()
             picker.setOnItemPickListener { _, item ->
                 heightText.setText("${item}cm")
-                mView.initHeight(item.toInt())
+                registerActivity.initHeight(item.toInt())
             }
         }
 
@@ -57,12 +63,12 @@ class RegisterFragmentF : Fragment() {
             picker.show()
             picker.setOnItemPickListener { _, item ->
                 weightText.setText("${item}kg")
-                mView.initWeight(item.toInt())
+                registerActivity.initWeight(item.toInt())
             }
         }
 
         finishButton.setOnClickListener {
-            mView.nextFragment()
+            registerActivity.nextFragment()
         }
     }
 

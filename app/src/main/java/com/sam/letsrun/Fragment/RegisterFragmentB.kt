@@ -1,6 +1,7 @@
 package com.sam.letsrun.Fragment
 
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
+import com.sam.letsrun.Activity.RegisterActivity
 import com.sam.letsrun.R
 import com.sam.letsrun.View.RegisterView
 import kotlinx.android.synthetic.main.fragment_register_b.*
@@ -20,7 +22,12 @@ import org.jetbrains.anko.support.v4.toast
  */
 class RegisterFragmentB : Fragment() {
 
-    lateinit var mView: RegisterView
+    private lateinit var registerActivity: RegisterActivity
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        registerActivity = context as RegisterActivity
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register_b, container, false)
@@ -35,8 +42,8 @@ class RegisterFragmentB : Fragment() {
                 val passwordB = repeatPwdText.text.toString()
                 //判断两次输入的密码是否一致
                 if (passwordA == passwordB) {
-                    mView.initPassword(passwordA)
-                    mView.nextFragment()
+                    registerActivity.initPassword(passwordA)
+                    registerActivity.nextFragment()
                 } else {
                     toast("密码不一致")
                 }

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import com.blankj.utilcode.util.ServiceUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.Utils
 import com.dinuscxj.progressbar.UnitUtils
@@ -28,6 +29,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.support.v4.intentFor
+import org.jetbrains.anko.support.v4.toast
+import org.jetbrains.anko.toast
 import java.util.*
 
 
@@ -49,10 +54,10 @@ class MainActivity : AppCompatActivity(), MainView {
     private var fragmentList = ArrayList<Fragment>()        //存储Fragment
     private lateinit var fragmentAdapter: MyFragmentAdapter     //Fragment适配器
 
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
+    lateinit var sharedPreferences: SharedPreferences
+    lateinit var sharedPreferencesEditor: SharedPreferences.Editor
 
-    private lateinit var token: String
+    lateinit var token: String
     lateinit var user: User
 
     private var friendService: Intent? = null       //监听好友添加等
@@ -69,10 +74,14 @@ class MainActivity : AppCompatActivity(), MainView {
 
         /*--绑定服务--*/
         friendService = Intent(this, FriendService::class.java)
-        startService(friendService)
+
+        if (user.isCountStep == 1) {
+            startService(friendService)
+        }
 
         sportService = Intent(this, SportService::class.java)
         startService(sportService)
+
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -94,8 +103,6 @@ class MainActivity : AppCompatActivity(), MainView {
                 .supportActionBar(false)
                 .statusBarAlpha(0.3f)
                 .init()
-
-        friendFragment.mView = this
 
         fragmentList.add(newsFragment)
         fragmentList.add(musicFragment)
@@ -166,12 +173,13 @@ class MainActivity : AppCompatActivity(), MainView {
      * @param friend
      * @param message
      */
-    override fun addFriendRequest(friend: String, message: String) {
+    fun addFriendRequest(friend: String, message: String) {
         val socketRequest = SocketRequest(Const.SOCKET_ADD_FRIEND,
                 user.telephone,
                 token,
                 AddFriendRequest(user.telephone, user.username, friend, message))
         Logger.json(Gson().toJson(socketRequest))
+        //开启
         EventBus.getDefault().postSticky(socketRequest)
     }
 
@@ -187,5 +195,34 @@ class MainActivity : AppCompatActivity(), MainView {
             bottomNavigation.models[3].updateBadgeTitle("${event.size}")
             bottomNavigation.models[3].showBadge()
         }
+    }
+
+    fun updateLocalUserInfo(newUser: User) {
+        user = newUser
+        sharedPreferencesEditor.putString("user", Gson().toJson(user))
+        sharedPreferencesEditor.commit()
+
+        if (user.isCountStep == 1) {
+            if (!ServiceUtils.isServiceRunning(SportService::class.java)) {
+                startService(sportService)
+            }
+        } else {
+            sportService?.let { stopService(it) }
+        }
+
+        toast("保存成功")
+    }
+
+    fun logout() {
+        toast("退出成功")
+        sharedPreferencesEditor.putString("token", "")
+                .putString("user", "")
+                .commit()
+        startActivity(intentFor<LoginActivity>().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+
+        friendService?.let { stopService(it) }
+        sportService?.let { stopService(it) }
+
+        this.finish()
     }
 }

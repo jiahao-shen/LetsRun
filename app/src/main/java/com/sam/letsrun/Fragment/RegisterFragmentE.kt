@@ -2,6 +2,7 @@ package com.sam.letsrun.Fragment
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.Gravity
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import cn.qqtheme.framework.picker.DatePicker
 import cn.qqtheme.framework.picker.OptionPicker
+import com.sam.letsrun.Activity.RegisterActivity
 import com.sam.letsrun.R
 import com.sam.letsrun.View.RegisterView
 import kotlinx.android.synthetic.main.fragment_register_e.*
@@ -20,8 +22,12 @@ import kotlinx.android.synthetic.main.fragment_register_e.*
  */
 class RegisterFragmentE : Fragment() {
 
+    private lateinit var registerActivity: RegisterActivity
 
-    lateinit var mView: RegisterView
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        registerActivity = context as RegisterActivity
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register_e, container, false)
@@ -41,7 +47,7 @@ class RegisterFragmentE : Fragment() {
             picker.show()
             picker.setOnDatePickListener(DatePicker.OnYearMonthDayPickListener { year, month, day ->
                 birthdayText.setText("$year-$month-$day")
-                mView.initBirthday("$year-$month-$day")
+                registerActivity.initBirthday("$year-$month-$day")
             })
         }
 
@@ -54,12 +60,12 @@ class RegisterFragmentE : Fragment() {
             picker.show()
             picker.setOnItemPickListener { _, item ->
                 bloodText.setText("${item}型")
-                mView.initBlood(item)
+                registerActivity.initBlood(item)
             }
         }
 
         nextButton.setOnClickListener {
-            mView.nextFragment()
+            registerActivity.nextFragment()
         }
     }
 

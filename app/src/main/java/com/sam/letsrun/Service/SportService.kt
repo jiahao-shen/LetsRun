@@ -1,8 +1,10 @@
 package com.sam.letsrun.Service
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -18,6 +20,8 @@ import com.amap.api.services.weather.WeatherSearch
 import com.amap.api.services.weather.WeatherSearchQuery
 import com.google.gson.Gson
 import com.orhanobut.logger.Logger
+import com.sam.letsrun.Custom.Const
+import com.sam.letsrun.Custom.MyUtils
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -28,6 +32,8 @@ import java.util.*
  */
 class SportService : Service(), AMapLocationListener, SensorEventListener, WeatherSearch.OnWeatherSearchListener {
 
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
     /**
      * 定位相关
      */
@@ -58,16 +64,24 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
     private var countOfThread = 0
     private var countOfWaves = 0
 
+    /**
+     * 运动数据
+     */
     private var totalSteps = 0  //总步数
-    private var speed: Double = 0.0   //当前速度
+    private var speed: Float = 0.0f   //当前速度
     private var sportStatus: Int = 0    //运动状态
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
+    @SuppressLint("CommitPrefEdits")
     override fun onCreate() {
         super.onCreate()
+
+        sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+        sharedPreferencesEditor = sharedPreferences.edit()
+
         initLocation()
         initStep()
     }
@@ -98,7 +112,7 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
         mLocationClient = AMapLocationClient(this)
         mLocationOption = AMapLocationClientOption()
         mLocationOption.locationPurpose = AMapLocationClientOption.AMapLocationPurpose.Sport
-        mLocationOption.interval = 60000
+        mLocationOption.interval = 6000
         mLocationClient.setLocationOption(mLocationOption)
         mLocationClient.setLocationListener(this)
         mLocationClient.startLocation()
@@ -109,13 +123,16 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
             if (location.errorCode == 0) {
                 searchWeather(location.city)
             }
+            speed = location.speed
         }
+        saveLocalSteps()
     }
 
     /**
      * 好了,从下往下的算法跟我一点关系都没有
      */
     private fun initStep() {
+        totalSteps = sharedPreferences.getInt("${MyUtils.getCurrentDate()}:steps", 0)
         sManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager    //传感器管理器
         val mSensorAccelerometer = sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         sManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_UI)   //注册传感器，设置刷新时间为60ms
@@ -259,14 +276,15 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
 
         return if (speed > 2.0001 && speed < 10.0001) {
             if (maxPeak > 25.0001 && maxThread > 25.0001 && aveThread > 15.0001) {
-                1
+                Const.SPORT_STATUS_RUN
             } else {
-                2
+                Const.SPORT_STATUS_BIKE
             }
-        } else 0
+        } else Const.SPORT_STATUS_WALK
     }
 
     private fun judge() {
+        Logger.e(totalSteps.toString())
         sportStatus = judgeStatus()
         Arrays.fill(waveList, 0f)
         Arrays.fill(threadList, 0f)
@@ -281,4 +299,8 @@ class SportService : Service(), AMapLocationListener, SensorEventListener, Weath
         mLocationClient.onDestroy()
     }
 
+    private fun saveLocalSteps() {
+        sharedPreferencesEditor.putInt("${MyUtils.getCurrentDate()}:steps", totalSteps)
+        sharedPreferencesEditor.commit()
+    }
 }

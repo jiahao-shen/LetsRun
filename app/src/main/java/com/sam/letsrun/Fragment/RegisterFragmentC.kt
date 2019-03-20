@@ -3,6 +3,7 @@ package com.sam.letsrun.Fragment
 
 import android.app.Activity
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -17,6 +18,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.orhanobut.logger.Logger
+import com.sam.letsrun.Activity.RegisterActivity
 import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.R
 import com.sam.letsrun.View.RegisterView
@@ -33,9 +35,13 @@ import java.io.File
  */
 class RegisterFragmentC : Fragment() {
 
-    lateinit var mView: RegisterView
-
+    private lateinit var registerActivity: RegisterActivity
     private lateinit var tempUri: Uri
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        registerActivity = context as RegisterActivity
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register_c, container, false)
@@ -68,9 +74,9 @@ class RegisterFragmentC : Fragment() {
             if (userNameText.text.toString() == "") {
                 toast("用户名不能为空")
             } else {
-                mView.initUserName(userNameText.text.toString())
-                mView.initImage(ConvertUtils.view2Bitmap(userImageView))
-                mView.nextFragment()
+                registerActivity.initUserName(userNameText.text.toString())
+                registerActivity.initImage(ConvertUtils.view2Bitmap(userImageView))
+                registerActivity.nextFragment()
             }
         }
     }

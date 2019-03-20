@@ -1,119 +1,174 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sam.letsrun.Fragment.SportFragment">
+    tools:context="com.sam.letsrun.Fragment.SportFragment"
+    android:orientation="vertical">
 
-    <ImageView
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/sportActionBar"
-        android:src="@color/action_bar"
         android:layout_width="match_parent"
-        android:layout_height="120dp" />
+        android:layout_height="120dp"
+        android:background="@color/action_bar">
 
     <ImageView
         android:id="@+id/weatherImageView"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/sportActionBar"
-        android:layout_marginLeft="10dp"
         android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         tools:ignore="VectorDrawableCompat" />
 
     <TextView
         android:id="@+id/cityTextView"
-        app:layout_constraintLeft_toRightOf="@+id/weatherImageView"
-        app:layout_constraintTop_toTopOf="@+id/weatherImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:layout_marginLeft="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        app:layout_constraintLeft_toRightOf="@+id/weatherImageView"
+        app:layout_constraintTop_toTopOf="@+id/weatherImageView" />
 
     <TextView
         android:id="@+id/weatherInfoTextView1"
-        app:layout_constraintLeft_toRightOf="@+id/cityTextView"
-        app:layout_constraintTop_toTopOf="@+id/cityTextView"
-        app:layout_constraintBottom_toBottomOf="@+id/cityTextView"
-        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cityTextView"
+        app:layout_constraintLeft_toRightOf="@+id/cityTextView"
+        app:layout_constraintTop_toTopOf="@+id/cityTextView" />
 
     <TextView
         android:id="@+id/weatherInfoTextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        app:layout_constraintLeft_toRightOf="@+id/weatherImageView"
-        app:layout_constraintBottom_toBottomOf="@+id/weatherImageView"
         android:textColor="@color/white"
         android:textSize="15sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        app:layout_constraintBottom_toBottomOf="@+id/weatherImageView"
+        app:layout_constraintLeft_toRightOf="@+id/weatherImageView" />
 
-    <com.liulishuo.magicprogresswidget.MagicProgressCircle
-        android:id="@+id/sportProgress"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+    </android.support.constraint.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/scrollView"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.464"
-        app:mpc_default_color="@color/mpc_default_color" />
+        app:layout_constraintTop_toBottomOf="@id/sportActionBar">
 
-    <TextView
-        android:id="@+id/text_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="今日步数"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/sportProgress"
-        app:layout_constraintLeft_toLeftOf="@+id/sportProgress"
-        app:layout_constraintRight_toRightOf="@+id/sportProgress"
-        app:layout_constraintTop_toTopOf="@+id/sportProgress"
-        app:layout_constraintVertical_bias="0.25" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/currentStepsView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:textSize="60sp"
-        app:layout_constraintLeft_toLeftOf="@+id/text_1"
-        app:layout_constraintRight_toRightOf="@+id/text_1"
-        app:layout_constraintTop_toBottomOf="@+id/text_1" />
+            <com.liulishuo.magicprogresswidget.MagicProgressCircle
+                android:id="@+id/sportProgress"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.049"
+                app:mpc_default_color="@color/mpc_default_color" />
 
-    <TextView
-        android:id="@+id/goalStepsView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="目标步数:10000"
-        app:layout_constraintLeft_toLeftOf="@+id/currentStepsView"
-        app:layout_constraintRight_toRightOf="@+id/currentStepsView"
-        app:layout_constraintTop_toBottomOf="@+id/currentStepsView" />
+            <TextView
+                android:id="@+id/text_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="今日步数"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/sportProgress"
+                app:layout_constraintLeft_toLeftOf="@+id/sportProgress"
+                app:layout_constraintRight_toRightOf="@+id/sportProgress"
+                app:layout_constraintTop_toTopOf="@+id/sportProgress"
+                app:layout_constraintVertical_bias="0.25" />
 
-    <at.markushi.ui.CircleButton
-        android:id="@+id/sportButton"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/ic_running"
-        app:cb_color="@color/cb_color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/sportProgress"
-        app:layout_constraintRight_toRightOf="@+id/sportProgress"
-        app:layout_constraintTop_toBottomOf="@+id/sportProgress"
-        app:layout_constraintVertical_bias="0.1"
-        tools:ignore="VectorDrawableCompat" />
+            <TextView
+                android:id="@+id/currentStepsView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textSize="60sp"
+                app:layout_constraintLeft_toLeftOf="@+id/text_1"
+                app:layout_constraintRight_toRightOf="@+id/text_1"
+                app:layout_constraintTop_toBottomOf="@+id/text_1" />
 
-</android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/goalStepsView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="目标步数:10000"
+                app:layout_constraintLeft_toLeftOf="@+id/currentStepsView"
+                app:layout_constraintRight_toRightOf="@+id/currentStepsView"
+                app:layout_constraintTop_toBottomOf="@+id/currentStepsView" />
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/sportButton"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/ic_running"
+                app:cb_color="@color/cb_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="@+id/sportProgress"
+                app:layout_constraintRight_toRightOf="@+id/sportProgress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sportProgress"
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="VectorDrawableCompat" />
+
+            <TextView
+                app:layout_constraintTop_toBottomOf="@id/sportButton"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="70dp"
+                android:text="按下开始呼吸"
+                android:textSize="25sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/breathButton"
+                app:layout_constraintTop_toBottomOf="@id/sportButton"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="150dp"
+                android:layout_width="150dp"
+                android:layout_marginBottom="180dp"
+                android:src="@drawable/ic_breathe_button"
+                android:layout_height="150dp" />
+
+            <TextView
+                android:id="@+id/breathCountText"
+                android:text="本次练习次数: 0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/breathButton"
+                android:layout_marginTop="60dp"
+                android:textSize="25sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </android.support.constraint.ConstraintLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

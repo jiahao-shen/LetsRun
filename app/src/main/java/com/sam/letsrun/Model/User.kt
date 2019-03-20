@@ -15,4 +15,4 @@ data class User(val telephone: String,
                 var weight: Int? = null,
                 var signature: String? = null,
                 var isCountStep: Int = 1,
-                var goalSteps: Int = 5000)
+                var goalSteps: Int = 10000)

@@ -86,13 +86,6 @@ class RegisterActivity : AppCompatActivity(), RegisterView {
      * 初始化fragment
      */
     private fun initFragment() {
-        fragmentA.mView = this
-        fragmentB.mView = this
-        fragmentC.mView = this
-        fragmentD.mView = this
-        fragmentE.mView = this
-        fragmentF.mView = this
-
         fragmentList.add(fragmentA)
         fragmentList.add(fragmentB)
         fragmentList.add(fragmentC)
@@ -111,7 +104,7 @@ class RegisterActivity : AppCompatActivity(), RegisterView {
      * fragment的接口
      * 用于跳转到下一个fragment
      */
-    override fun nextFragment() {
+    fun nextFragment() {
         if (mViewPager.currentItem == fragmentList.size - 1) {
             presenter.register(telephone, password, userName, gender, birthday, blood, height, weight)  //fragment到达最后一页,直接调用
         } else {
@@ -120,39 +113,39 @@ class RegisterActivity : AppCompatActivity(), RegisterView {
         }
     }
 
-    override fun initTelephone(data: String) {
+    fun initTelephone(data: String) {
         telephone = data
     }
 
-    override fun initPassword(data: String) {
+    fun initPassword(data: String) {
         password = data
     }
 
-    override fun initUserName(data: String) {
+    fun initUserName(data: String) {
         userName = data
     }
 
-    override fun initGender(data: String) {
+    fun initGender(data: String) {
         gender = data
     }
 
-    override fun initBirthday(data: String) {
+    fun initBirthday(data: String) {
         birthday = data
     }
 
-    override fun initBlood(data: String) {
+    fun initBlood(data: String) {
         blood = data
     }
 
-    override fun initHeight(data: Int) {
+    fun initHeight(data: Int) {
         height = data
     }
 
-    override fun initWeight(data: Int) {
+    fun initWeight(data: Int) {
         weight = data
     }
 
-    override fun initImage(bitmap: Bitmap) {
+    fun initImage(bitmap: Bitmap) {
         val file = File(Const.LOCAL_PATH, "$telephone.jpg")
         if (file.exists()) {
             file.delete()

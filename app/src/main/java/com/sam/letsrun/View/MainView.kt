@@ -5,6 +5,4 @@ package com.sam.letsrun.View
  */
 interface MainView {
 
-    fun addFriendRequest(friend: String, message: String)
-
 }

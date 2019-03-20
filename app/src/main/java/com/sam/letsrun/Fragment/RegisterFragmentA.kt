@@ -2,6 +2,7 @@ package com.sam.letsrun.Fragment
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -9,8 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.orhanobut.logger.Logger
+import com.sam.letsrun.Activity.MainActivity
+import com.sam.letsrun.Activity.RegisterActivity
 import com.sam.letsrun.Presenter.RegisterFragmentPresenter
 import com.sam.letsrun.R
+import com.sam.letsrun.View.MainView
 import com.sam.letsrun.View.RegisterFragmentView
 import com.sam.letsrun.View.RegisterView
 import kotlinx.android.synthetic.main.fragment_register_a.*
@@ -26,8 +30,13 @@ import java.util.concurrent.TimeUnit
  */
 class RegisterFragmentA : Fragment(), RegisterFragmentView {
 
-    lateinit var mView: RegisterView
-    var presenter = RegisterFragmentPresenter()
+    private lateinit var registerActivity: RegisterActivity
+    private var presenter = RegisterFragmentPresenter()
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        registerActivity = context as RegisterActivity
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register_a, container, false)
@@ -88,8 +97,8 @@ class RegisterFragmentA : Fragment(), RegisterFragmentView {
 
     override fun codeCheckSuccess() {
         toast("验证成功")
-        mView.initTelephone(telephoneText.text.toString())
-        mView.nextFragment()
+        registerActivity.initTelephone(telephoneText.text.toString())
+        registerActivity.nextFragment()
     }
 
     override fun codeCheckError() {

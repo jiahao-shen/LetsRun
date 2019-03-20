@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/musicAlbumArtView"
+        android:src="@drawable/ic_music"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        tools:ignore="VectorDrawableCompat" />
+
+    <TextView
+        android:id="@+id/musicTitleText"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:maxEms="10"
+        android:text="fdshajkfhkdjsaf"
+        app:layout_constraintLeft_toRightOf="@id/musicAlbumArtView"
+        app:layout_constraintTop_toTopOf="@id/musicAlbumArtView"
+        android:layout_marginTop="3dp"
+        android:textSize="20sp"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/musicArtistText"
+        android:maxLines="1"
+        android:maxEms="15"
+        android:ellipsize="end"
+        app:layout_constraintLeft_toRightOf="@id/musicAlbumArtView"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="10dp"
+        android:text="周杰伦"
+        app:layout_constraintBottom_toBottomOf="@id/musicAlbumArtView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</android.support.constraint.ConstraintLayout>

@@ -8,7 +8,9 @@ import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,7 @@ import com.blankj.utilcode.util.Utils
 import com.suke.widget.SwitchButton
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
+import com.orhanobut.logger.Logger
 import com.rengwuxian.materialedittext.MaterialEditText
 import com.sam.letsrun.Activity.LoginActivity
 import com.sam.letsrun.Activity.MainActivity
@@ -42,11 +45,17 @@ import org.jetbrains.anko.support.v4.toast
 @Suppress("UNREACHABLE_CODE")
 class SettingFragment : Fragment(), SettingFragmentView {
 
-    var presenter = SettingFragmentPresenter()
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
+    private var presenter = SettingFragmentPresenter()
+    private lateinit var mainActivity: MainActivity
     private lateinit var token: String
     private lateinit var user: User
+
+    override fun onAttach(context: Context?) {
+        Logger.e("Attach")
+        super.onAttach(context)
+
+        mainActivity = context as MainActivity
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_setting, container, false)
@@ -56,8 +65,8 @@ class SettingFragment : Fragment(), SettingFragmentView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initUser()
         setUserInfo()
+
         presenter.mView = this
 
         userSignatureText.setOnClickListener {
@@ -111,7 +120,7 @@ class SettingFragment : Fragment(), SettingFragmentView {
                     .positiveText("保存")
                     .autoDismiss(false)
                     .onPositive { dialog, _ ->
-                        if (goalSteps <= 5000) {
+                        if (goalSteps < 5000) {
                             toast("目标步数不能小于5000")
                         } else {
                             val newUser = user.copy()
@@ -138,11 +147,17 @@ class SettingFragment : Fragment(), SettingFragmentView {
                 isCountStep = if (isChecked) 1 else 0
             }
 
-            goalStepText.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
+            goalStepText.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
                     goalSteps = goalStepText.text.toString().toInt()
                 }
-            }
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+            })
 
             goalStepText.setOnEditorActionListener { v, _, _ ->
                 goalStepText.clearFocus()
@@ -168,20 +183,13 @@ class SettingFragment : Fragment(), SettingFragmentView {
 
     @SuppressLint("CommitPrefEdits")
     private fun initUser() {
-        sharedPreferences = activity!!.getSharedPreferences(activity!!.packageName, Context.MODE_PRIVATE)
-        sharedPreferencesEditor = sharedPreferences.edit()
-        token = sharedPreferences.getString("token", "")
-        user = Gson().fromJson(sharedPreferences.getString("user", ""), User::class.java)
+        token = mainActivity.token
+        user = mainActivity.user
 
     }
 
     override fun logoutSuccess() {
-        toast("退出成功")
-        sharedPreferencesEditor.putString("token", "")
-                .putString("user", "")
-                .commit()
-        startActivity(intentFor<LoginActivity>().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-        activity?.finish()
+        mainActivity.logout()
     }
 
     override fun logoutFailed() {
@@ -201,15 +209,13 @@ class SettingFragment : Fragment(), SettingFragmentView {
     }
 
     override fun updateUserInfoSuccess(newUser: User) {
-        user = newUser
-        sharedPreferencesEditor.putString("user", Gson().toJson(user))
-        sharedPreferencesEditor.commit()
-
+        mainActivity.updateLocalUserInfo(newUser)
         setUserInfo()
-        toast("保存成功")
     }
 
     private fun setUserInfo() {
+        initUser()
+
         GlideApp.with(this)
                 .load(MyUtils.getImageUrl(user.telephone))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)

@@ -74,5 +74,8 @@ class Const {
 
         const val NEWS_HTTP_ADDRESS = "http://v.juhe.cn/toutiao/index?type=tiyu&key=1b42a673db5d082403746c1c670ac6ac"
 
+        const val SPORT_STATUS_WALK = 110
+        const val SPORT_STATUS_RUN = 111
+        const val SPORT_STATUS_BIKE = 112
     }
 }

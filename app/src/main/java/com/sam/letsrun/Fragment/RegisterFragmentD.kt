@@ -1,5 +1,6 @@
 package com.sam.letsrun.Fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -10,7 +11,7 @@ import com.sam.letsrun.View.RegisterView
 import kotlinx.android.synthetic.main.fragment_register_d.*
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
-
+import com.sam.letsrun.Activity.RegisterActivity
 
 
 /**
@@ -19,7 +20,12 @@ import com.orhanobut.logger.Logger
  */
 class RegisterFragmentD : Fragment() {
 
-    lateinit var mView: RegisterView
+    private lateinit var registerActivity: RegisterActivity
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        registerActivity = context as RegisterActivity
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register_d, container, false)
@@ -32,16 +38,16 @@ class RegisterFragmentD : Fragment() {
         sexRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.manButton -> {
-                    mView.initGender("男")
+                    registerActivity.initGender("男")
                 }
                 R.id.womanButton -> {
-                    mView.initGender("女")
+                    registerActivity.initGender("女")
                 }
             }
         }
 
         nextButton.setOnClickListener {
-            mView.nextFragment()
+            registerActivity.nextFragment()
         }
     }
 }

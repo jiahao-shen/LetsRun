@@ -26,6 +26,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.rengwuxian.materialedittext.MaterialEditText
+import com.sam.letsrun.Activity.MainActivity
 import com.sam.letsrun.Adapter.AddFriendAdapter
 import com.sam.letsrun.Adapter.FriendListAdapter
 import com.sam.letsrun.Custom.Const
@@ -52,17 +53,13 @@ import org.jetbrains.anko.support.v4.toast
  */
 class FriendFragment : Fragment(), FriendFragmentView {
 
-    private var searchQuery: String = ""    //查询对象
-
+    private lateinit var mainActivity: MainActivity
     private var presenter = FriendFragmentPresenter()
-    lateinit var mView: MainView
-
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
 
     private lateinit var user: User
     private lateinit var token: String
 
+    private var searchQuery: String = ""    //查询对象
     private lateinit var searchUserDialog: MaterialDialog   //查询对话框
     private lateinit var friendRequestDialog: MaterialDialog    //好友申请对话框
     private var friendRequestList: ArrayList<AddFriendRequest> = ArrayList()    //好友申请列表
@@ -72,6 +69,11 @@ class FriendFragment : Fragment(), FriendFragmentView {
     fun onMessage(event: ArrayList<AddFriendRequest>) {
         friendRequestList = event
         noticeButton.show(true)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        mainActivity = context as MainActivity
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +93,6 @@ class FriendFragment : Fragment(), FriendFragmentView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Utils.init(this.context!!)
         presenter.mView = this
 
         initUser()      //获取user信息
@@ -134,10 +135,8 @@ class FriendFragment : Fragment(), FriendFragmentView {
 
     @SuppressLint("CommitPrefEdits")
     private fun initUser() {
-        sharedPreferences = activity!!.getSharedPreferences(activity!!.packageName, Context.MODE_PRIVATE)
-        sharedPreferencesEditor = sharedPreferences.edit()
-        token = sharedPreferences.getString("token", "")
-        user = Gson().fromJson(sharedPreferences.getString("user", ""), User::class.java)
+        user = mainActivity.user
+        token = mainActivity.token
     }
 
     override fun showSearchResult(msg: Int, response: SearchUserResponse?) {        //显示搜索结果
@@ -157,7 +156,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
         searchAddUserButton.setOnClickListener {
             //发送好友申请
             if (searchAddInfo.isCharactersCountValid) {
-                mView.addFriendRequest(searchQuery, searchAddInfo.text.toString())
+                mainActivity.addFriendRequest(searchQuery, searchAddInfo.text.toString())
                 toast("已发送好友请求")
                 searchUserDialog.cancel()
                 KeyboardUtils.hideSoftInput(view)
@@ -280,6 +279,8 @@ class FriendFragment : Fragment(), FriendFragmentView {
         }
         adapter.notifyDataSetChanged()      //更新界面
         presenter.addFriendAnswer(user.telephone, token, msg, addFriendResponseList)    //提交申请回答
+
+        //EventBus发送好友请求
         EventBus.getDefault().postSticky(friendRequestList)
     }
 

@@ -16,8 +16,6 @@ import com.sam.letsrun.Model.News
 import com.sam.letsrun.Presenter.NewsFragmentPresenter
 import com.sam.letsrun.R
 import com.sam.letsrun.View.NewsFragmentView
-import com.scwang.smartrefresh.layout.api.RefreshHeader
-import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener
 import kotlinx.android.synthetic.main.fragment_news.*
 import org.jetbrains.anko.support.v4.toast
 
@@ -35,6 +33,7 @@ class NewsFragment : Fragment(), NewsFragmentView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.mView = this
+
         presenter.loadNews()
 
         newsRefreshLayout.setOnRefreshListener {
@@ -74,4 +73,5 @@ class NewsFragment : Fragment(), NewsFragmentView {
     override fun netError() {
         toast("网络异常,请检查")
     }
+
 }// Required empty public constructor
