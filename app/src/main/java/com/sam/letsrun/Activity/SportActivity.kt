@@ -4,11 +4,13 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.location.Location
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.annotation.RequiresApi
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MotionEvent
@@ -193,7 +195,9 @@ class SportActivity : AppCompatActivity(), DistanceSearch.OnDistanceSearchListen
         }
 
         cameraButton.setOnClickListener {
-//            TODO("拍照我也不知道该写什么,先放着把")
+            val intent = Intent()
+            intent.action = MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA
+            startActivityForResult(intent, 0)
         }
 
     }
