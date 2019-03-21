@@ -11,8 +11,7 @@ import com.sam.letsrun.R
 /**
  * 添加好友适配器
  */
-class AddFriendAdapter(data: ArrayList<AddFriendRequest>) :
-        BaseQuickAdapter<AddFriendRequest, BaseViewHolder>(R.layout.item_add_friend_request, data) {
+class AddFriendAdapter(data: ArrayList<AddFriendRequest>) : BaseQuickAdapter<AddFriendRequest, BaseViewHolder>(R.layout.item_add_friend_request, data) {
 
     override fun convert(helper: BaseViewHolder, item: AddFriendRequest) {
         helper.setText(R.id.userNameText, item.fromUserName)

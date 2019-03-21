@@ -17,6 +17,7 @@ class Const {
         const val BASE_HTTP_ADDRESS = "http://$BASE_IP/LetsRunService/app/"
         const val IMAGE_ADDRESS = "http://$BASE_IP/LetsRunService/UserImage/"
         const val BASE_WEBSOCKET_ADDRESS = "ws://$BASE_IP:8000"
+        const val NEWS_HTTP_ADDRESS = "http://v.juhe.cn/toutiao/index?type=tiyu&key=1b42a673db5d082403746c1c670ac6ac"
 
         /*--TYPE--*/
         val FILETYPE = MediaType.parse("multipart/form-data")
@@ -72,10 +73,16 @@ class Const {
         const val SELECT_IMAGE_CAMERA = 101
         const val SELECT_IMAGE_ALBUM = 102
 
-        const val NEWS_HTTP_ADDRESS = "http://v.juhe.cn/toutiao/index?type=tiyu&key=1b42a673db5d082403746c1c670ac6ac"
-
+        /*--运动状态--*/
         const val SPORT_STATUS_WALK = 110
         const val SPORT_STATUS_RUN = 111
         const val SPORT_STATUS_BIKE = 112
+
+        /*--音乐控制--*/
+        const val MUSIC_START = 120
+        const val MUSIC_PAUSE = 121
+        const val MUSIC_STOP = 122
+        const val MUSIC_RESUME = 123
+        const val MUSIC_COMPLETE = 124
     }
 }

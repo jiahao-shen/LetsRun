@@ -8,9 +8,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import com.blankj.utilcode.util.ServiceUtils
-import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.Utils
-import com.dinuscxj.progressbar.UnitUtils
 import com.google.gson.Gson
 import com.gyf.barlibrary.ImmersionBar
 import com.orhanobut.logger.Logger
@@ -18,10 +16,12 @@ import com.sam.letsrun.Adapter.MyFragmentAdapter
 import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.Fragment.*
 import com.sam.letsrun.Model.AddFriendRequest
+import com.sam.letsrun.Model.EventFriendRequestList
 import com.sam.letsrun.Model.SocketRequest
 import com.sam.letsrun.Model.User
 import com.sam.letsrun.R
 import com.sam.letsrun.Service.FriendService
+import com.sam.letsrun.Service.MusicService
 import com.sam.letsrun.Service.SportService
 import com.sam.letsrun.View.MainView
 import devlight.io.library.ntb.NavigationTabBar
@@ -30,8 +30,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.support.v4.intentFor
-import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.toast
 import java.util.*
 
@@ -62,6 +60,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
     private var friendService: Intent? = null       //监听好友添加等
     private var sportService: Intent? = null        //定位和计步服务
+    private var musicService: Intent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +81,8 @@ class MainActivity : AppCompatActivity(), MainView {
         sportService = Intent(this, SportService::class.java)
         startService(sportService)
 
+        musicService = Intent(this, MusicService::class.java)
+        startService(musicService)
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -90,8 +91,6 @@ class MainActivity : AppCompatActivity(), MainView {
         sharedPreferencesEditor = sharedPreferences.edit()
         token = sharedPreferences.getString("token", "")
         user = Gson().fromJson(sharedPreferences.getString("user", ""), User::class.java)
-
-        Logger.e(sharedPreferences.getString("user", ""))
     }
 
     /**
@@ -164,8 +163,7 @@ class MainActivity : AppCompatActivity(), MainView {
         friendService?.let { stopService(it) }
         sportService?.let { stopService(it) }
 
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this)
+        EventBus.getDefault().unregister(this)
     }
 
     /**
@@ -178,7 +176,6 @@ class MainActivity : AppCompatActivity(), MainView {
                 user.telephone,
                 token,
                 AddFriendRequest(user.telephone, user.username, friend, message))
-        Logger.json(Gson().toJson(socketRequest))
         //开启
         EventBus.getDefault().postSticky(socketRequest)
     }
@@ -187,12 +184,13 @@ class MainActivity : AppCompatActivity(), MainView {
      * 根据好友添加请求动态更新底部导航栏的红点
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessage(event: ArrayList<AddFriendRequest>) {
-        if (event.size == 0) {
+    fun onMessage(event: EventFriendRequestList) {
+        val friendRequestList = event.friendRequestList
+        if (friendRequestList.size == 0) {
             bottomNavigation.models[3].hideBadge()
         } else {
-            bottomNavigation.models[3].badgeTitle = "${event.size}"
-            bottomNavigation.models[3].updateBadgeTitle("${event.size}")
+            bottomNavigation.models[3].badgeTitle = "${friendRequestList.size}"
+            bottomNavigation.models[3].updateBadgeTitle("${friendRequestList.size}")
             bottomNavigation.models[3].showBadge()
         }
     }
@@ -222,6 +220,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
         friendService?.let { stopService(it) }
         sportService?.let { stopService(it) }
+        musicService?.let { stopService(it) }
 
         this.finish()
     }

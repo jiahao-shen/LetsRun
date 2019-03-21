@@ -3,7 +3,6 @@ package com.sam.letsrun.Fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -21,9 +20,7 @@ import com.beardedhen.androidbootstrap.BootstrapButton
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
-import com.blankj.utilcode.util.Utils
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.google.gson.Gson
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.rengwuxian.materialedittext.MaterialEditText
 import com.sam.letsrun.Activity.MainActivity
@@ -32,14 +29,10 @@ import com.sam.letsrun.Adapter.FriendListAdapter
 import com.sam.letsrun.Custom.Const
 import com.sam.letsrun.Custom.MyUtils
 import com.sam.letsrun.GlideApp
-import com.sam.letsrun.Model.AddFriendRequest
-import com.sam.letsrun.Model.Friend
-import com.sam.letsrun.Model.SearchUserResponse
-import com.sam.letsrun.Model.User
+import com.sam.letsrun.Model.*
 import com.sam.letsrun.Presenter.FriendFragmentPresenter
 import com.sam.letsrun.R
 import com.sam.letsrun.View.FriendFragmentView
-import com.sam.letsrun.View.MainView
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_friend.*
 import org.greenrobot.eventbus.EventBus
@@ -66,8 +59,8 @@ class FriendFragment : Fragment(), FriendFragmentView {
     private lateinit var tempList: ArrayList<AddFriendRequest>      //缓存列表
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessage(event: ArrayList<AddFriendRequest>) {
-        friendRequestList = event
+    fun onMessage(event: EventFriendRequestList) {
+        friendRequestList = event.friendRequestList
         noticeButton.show(true)
     }
 
@@ -281,7 +274,7 @@ class FriendFragment : Fragment(), FriendFragmentView {
         presenter.addFriendAnswer(user.telephone, token, msg, addFriendResponseList)    //提交申请回答
 
         //EventBus发送好友请求
-        EventBus.getDefault().postSticky(friendRequestList)
+        EventBus.getDefault().postSticky(EventFriendRequestList(friendRequestList))
     }
 
     override fun addFriendSuccess() {

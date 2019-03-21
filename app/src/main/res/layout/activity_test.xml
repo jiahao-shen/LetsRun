@@ -10,39 +10,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <com.alamkanak.weekview.WeekView
-            android:id="@+id/weekView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:columnGap="8dp"
-            app:dayBackgroundColor="#05000000"
-            app:eventTextColor="@android:color/white"
-            app:headerColumnBackground="#ffffffff"
-            app:headerColumnPadding="8dp"
-            app:headerColumnTextColor="#8f000000"
-            app:headerRowBackgroundColor="#ffefefef"
-            app:headerRowPadding="12dp"
-            app:hourHeight="60dp"
-            app:noOfVisibleDays="3"
-            app:textSize="12sp"
-            app:todayBackgroundColor="#1848adff" />
+        <!--<com.alamkanak.weekview.WeekView-->
+            <!--android:id="@+id/weekView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="200dp"-->
+            <!--app:columnGap="8dp"-->
+            <!--app:dayBackgroundColor="#05000000"-->
+            <!--app:eventTextColor="@android:color/white"-->
+            <!--app:headerColumnBackground="#ffffffff"-->
+            <!--app:headerColumnPadding="8dp"-->
+            <!--app:headerColumnTextColor="#8f000000"-->
+            <!--app:headerRowBackgroundColor="#ffefefef"-->
+            <!--app:headerRowPadding="12dp"-->
+            <!--app:hourHeight="60dp"-->
+            <!--app:noOfVisibleDays="3"-->
+            <!--app:textSize="12sp"-->
+            <!--app:todayBackgroundColor="#1848adff" />-->
 
-        <com.baoyachi.stepview.HorizontalStepView
-            android:background="@color/bootstrap_gray_lighter"
-            android:id="@+id/stepView1"
-            android:layout_width="match_parent"
-            android:layout_height="100dp" />
+        <!--<com.baoyachi.stepview.HorizontalStepView-->
+            <!--android:background="@color/bootstrap_gray_lighter"-->
+            <!--android:id="@+id/stepView1"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="100dp" />-->
 
-        <com.baoyachi.stepview.VerticalStepView
-            android:background="@color/bootstrap_gray_lighter"
-            android:id="@+id/stepView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <!--<com.baoyachi.stepview.VerticalStepView-->
+            <!--android:background="@color/bootstrap_gray_lighter"-->
+            <!--android:id="@+id/stepView2"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"/>-->
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChart"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"/>
+        <!--<com.github.mikephil.charting.charts.LineChart-->
+            <!--android:id="@+id/lineChart"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="200dp"/>-->
     </LinearLayout>
 
 

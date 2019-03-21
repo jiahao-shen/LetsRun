@@ -81,14 +81,14 @@ class FriendService : Service() {
 
                 Const.SOCKET_ADD_FRIEND -> {
                     friendRequestList.add(Gson().fromJson(Gson().toJson(response.info), AddFriendRequest::class.java))      //往申请列表中添加新的好友申请
-                    EventBus.getDefault().postSticky(friendRequestList)       //发送
+                    EventBus.getDefault().postSticky(EventFriendRequestList(friendRequestList))       //发送
                 }
 
                 Const.UNKNOWN_ERROR -> { }
 
                 Const.SOCKET_LOGIN_CODE -> {
                     friendRequestList.addAll(Gson().fromJson<ArrayList<AddFriendRequest>>(Gson().toJson(response.info), object : TypeToken<ArrayList<AddFriendRequest>>() {}.type))
-                    EventBus.getDefault().postSticky(friendRequestList)
+                    EventBus.getDefault().postSticky(EventFriendRequestList(friendRequestList))
                 }
             }
         }
