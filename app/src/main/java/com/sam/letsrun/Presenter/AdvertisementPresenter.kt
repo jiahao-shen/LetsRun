@@ -47,7 +47,6 @@ class AdvertisementPresenter {
                                 mView.loadFailed()
                                 return
                             }
-                            Logger.e(response.body().toString())
                             val myResponse = response.body() as AdvertisementResponse
                             when (myResponse.msg) {
                                 //失败

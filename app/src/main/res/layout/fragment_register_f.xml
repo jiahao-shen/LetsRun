@@ -4,51 +4,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/heightText"
-        android:layout_width="250dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:focusable="false"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:hint="填写身高"
-        app:met_textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.466"
-        app:met_baseColor="@color/colorPrimary"
-        app:met_iconLeft="@drawable/ic_height" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical">
 
-    <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/weightText"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"
-        android:focusable="false"
-        app:met_textColor="@color/black"
-        android:gravity="center"
-        android:hint="填写体重"
-        app:layout_constraintLeft_toLeftOf="@+id/heightText"
-        app:layout_constraintRight_toRightOf="@+id/heightText"
-        app:layout_constraintTop_toBottomOf="@+id/heightText"
-        app:met_baseColor="@color/colorPrimary"
-        app:met_iconLeft="@drawable/ic_weight" />
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/heightText"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:hint="填写身高"
+            app:met_textColor="@color/black"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_iconLeft="@drawable/ic_height" />
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="完成注册"
-        android:id="@+id/finishButton"
-        app:bootstrapBrand="danger"
-        app:bootstrapSize="xl"
-        app:layout_constraintLeft_toLeftOf="@+id/weightText"
-        app:layout_constraintRight_toRightOf="@+id/weightText"
-        app:layout_constraintTop_toBottomOf="@+id/weightText"
-        app:roundedCorners="true" />
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/weightText"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:focusable="false"
+            app:met_textColor="@color/black"
+            android:gravity="center"
+            android:hint="填写体重"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_iconLeft="@drawable/ic_weight" />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="完成注册"
+            android:id="@+id/finishButton"
+            app:bootstrapBrand="danger"
+            app:bootstrapSize="xl"
+            app:roundedCorners="true" />
+
+    </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>
 

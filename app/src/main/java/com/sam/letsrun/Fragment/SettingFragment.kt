@@ -51,7 +51,6 @@ class SettingFragment : Fragment(), SettingFragmentView {
     private lateinit var user: User
 
     override fun onAttach(context: Context?) {
-        Logger.e("Attach")
         super.onAttach(context)
 
         mainActivity = context as MainActivity

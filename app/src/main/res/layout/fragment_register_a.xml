@@ -1,85 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/telephoneText"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:hint="手机号"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4"
-        app:met_floatingLabel="highlight"
-        android:textSize="20sp"
-        app:met_primaryColor="@color/colorPrimary"
-        app:met_iconLeft="@drawable/ic_telephone"
-        />
-
     <LinearLayout
-        android:id="@+id/linearlayout"
-        android:layout_width="250dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="@+id/telephoneText"
-        app:layout_constraintRight_toRightOf="@+id/telephoneText"
-        app:layout_constraintTop_toBottomOf="@+id/telephoneText"
-        android:layout_marginTop="20dp" >
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical">
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/codeText"
-            android:hint="验证码"
+            android:id="@+id/telephoneText"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="手机号"
+            android:inputType="number"
             android:textSize="20sp"
             app:met_floatingLabel="highlight"
-            android:layout_width="150dp"
+            app:met_iconLeft="@drawable/ic_telephone"
+            app:met_primaryColor="@color/colorPrimary" />
+
+        <LinearLayout
+            android:id="@+id/linearlayout"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            app:met_iconLeft="@drawable/ic_message"
-            android:inputType="number"
-            android:imeOptions="actionDone"
-            app:met_primaryColor="@color/colorPrimary"
-            />
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/codeText"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:hint="验证码"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:textSize="20sp"
+                app:met_floatingLabel="highlight"
+                app:met_iconLeft="@drawable/ic_message"
+                app:met_primaryColor="@color/colorPrimary" />
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                android:id="@+id/messageButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="8dp"
+                android:text="点击获取"
+                app:bootstrapBrand="primary"
+                app:bootstrapSize="md"
+                app:buttonMode="regular"
+                app:roundedCorners="true" />
+
+        </LinearLayout>
 
         <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/messageButton"
-            android:text="点击获取"
-            app:bootstrapSize="md"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            app:bootstrapBrand="primary"
-            app:roundedCorners="true"
+            android:id="@+id/nextButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="下一步"
+            app:bootstrapBrand="danger"
+            app:bootstrapSize="xl"
             app:buttonMode="regular"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            app:layout_constraintLeft_toLeftOf="@+id/linearlayout"
+            app:layout_constraintRight_toRightOf="@+id/linearlayout"
+            app:layout_constraintTop_toBottomOf="@+id/linearlayout"
+            app:roundedCorners="true" />
 
     </LinearLayout>
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
-        android:id="@+id/nextButton"
-        android:layout_width="250dp"
-        app:bootstrapSize="xl"
-        android:text="下一步"
-        app:buttonMode="regular"
-        app:roundedCorners="true"
-        app:bootstrapBrand="danger"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="@+id/linearlayout"
-        app:layout_constraintLeft_toLeftOf="@+id/linearlayout"
-        app:layout_constraintTop_toBottomOf="@+id/linearlayout"
-        android:layout_marginTop="20dp"
-        />
 
 </android.support.constraint.ConstraintLayout>

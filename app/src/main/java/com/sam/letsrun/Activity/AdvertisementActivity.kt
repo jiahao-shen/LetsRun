@@ -6,6 +6,10 @@ import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.AnimationUtils
+import android.view.animation.ScaleAnimation
 import com.blankj.utilcode.util.Utils
 import com.google.gson.Gson
 import com.orhanobut.logger.AndroidLogAdapter
@@ -29,18 +33,27 @@ class AdvertisementActivity : AppCompatActivity(), AdvertisementView {
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
-    private var presenter = AdvertisementPresenter()
     private lateinit var user: User
     private lateinit var token: String
+    private lateinit var animationSet: AnimationSet
+
+    private var presenter = AdvertisementPresenter()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_advertisement)
-        Utils.init(application)
-
         Logger.addLogAdapter(AndroidLogAdapter())   //Logger初始化
-        initUser()
+        Utils.init(application)
         presenter.mView = this      //view一定不要忘记初始化
+
+        animationSet = AnimationSet(true)
+        animationSet.duration = 2000
+        animationSet.isFillEnabled = true
+        animationSet.fillAfter = true
+        animationSet.addAnimation(ScaleAnimation(1.0f, 1.5f, 1.0f, 1.5f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f))
+
+        initUser()
     }
 
 
@@ -64,8 +77,18 @@ class AdvertisementActivity : AppCompatActivity(), AdvertisementView {
      */
     override fun loadFailed() {
         Logger.e("loadFailed")
-        progressBar.visibility = View.GONE
-        startActivity<LoginActivity>()  //跳转到登录界面
+        advertiseView.startAnimation(animationSet)
+        animationSet.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                startActivity<LoginActivity>()  //跳转到登录界面
+            }
+
+            override fun onAnimationStart(animation: Animation?) {
+            }
+        })
     }
 
     /**
@@ -73,10 +96,20 @@ class AdvertisementActivity : AppCompatActivity(), AdvertisementView {
      * @param user: User
      */
     override fun loadSuccess(user: User) {
-        progressBar.visibility = View.GONE
         Logger.e(Gson().toJson(user))
         sharedPreferencesEditor.putString("user", Gson().toJson(user)).commit()     //保存新的user信息到本地
-        startActivity<MainActivity>()   //跳转到主界面
+        advertiseView.startAnimation(animationSet)
+        animationSet.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                startActivity<MainActivity>()   //跳转到主界面
+            }
+
+            override fun onAnimationStart(animation: Animation?) {
+            }
+        })
     }
 
     /**

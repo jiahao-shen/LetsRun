@@ -36,6 +36,7 @@ class NewsFragmentPresenter {
                             return
                         }
                         val newsResponse = response.body() as NewsResponse
+                        Logger.e(newsResponse.error_code.toString())
                         when (newsResponse.error_code) {
                             0 -> {
                                 val newsList = newsResponse.result.data
@@ -43,7 +44,11 @@ class NewsFragmentPresenter {
                                     item.thumbnail_pic_s?.let { item.type = News.SINGLE }
                                     item.thumbnail_pic_s03?.let { item.type = News.MULTI }
                                 }
+                                Logger.e("fuck1")
                                 mView.loadSuccess(newsList)
+                            }
+                            else -> {
+                                mView.loadError()
                             }
                         }
                     }
