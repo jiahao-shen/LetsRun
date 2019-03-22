@@ -48,7 +48,7 @@ class AdvertisementActivity : AppCompatActivity(), AdvertisementView {
         presenter.mView = this      //view一定不要忘记初始化
 
         animationSet = AnimationSet(true)
-        animationSet.duration = 2000
+        animationSet.duration = 1000
         animationSet.isFillEnabled = true
         animationSet.fillAfter = true
         animationSet.addAnimation(ScaleAnimation(1.0f, 1.5f, 1.0f, 1.5f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f))

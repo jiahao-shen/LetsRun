@@ -36,7 +36,6 @@ class NewsFragmentPresenter {
                             return
                         }
                         val newsResponse = response.body() as NewsResponse
-                        Logger.e(newsResponse.error_code.toString())
                         when (newsResponse.error_code) {
                             0 -> {
                                 val newsList = newsResponse.result.data

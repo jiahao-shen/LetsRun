@@ -3,8 +3,7 @@ package com.sam.letsrun.Fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -17,15 +16,22 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
-import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.Utils
+import com.blankj.utilcode.util.TimeUtils
 import com.suke.widget.SwitchButton
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.google.gson.Gson
+import com.github.mikephil.charting.charts.CombinedChart
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.github.mikephil.charting.formatter.IValueFormatter
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.utils.ViewPortHandler
 import com.orhanobut.logger.Logger
 import com.rengwuxian.materialedittext.MaterialEditText
-import com.sam.letsrun.Activity.LoginActivity
 import com.sam.letsrun.Activity.MainActivity
 import com.sam.letsrun.Custom.MyUtils
 import com.sam.letsrun.GlideApp
@@ -35,8 +41,10 @@ import com.sam.letsrun.R
 import com.sam.letsrun.View.SettingFragmentView
 import kotlinx.android.synthetic.main.fragment_setting.*
 import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.toast
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * 设置Fragment
@@ -50,9 +58,11 @@ class SettingFragment : Fragment(), SettingFragmentView {
     private lateinit var token: String
     private lateinit var user: User
 
+    private lateinit var stepsHistory: ArrayList<Int>
+    private lateinit var distanceHistory: ArrayList<Float>
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-
         mainActivity = context as MainActivity
     }
 
@@ -85,7 +95,7 @@ class SettingFragment : Fragment(), SettingFragmentView {
 
         userInformationLayout.setOnClickListener {
             val userInfoDialog = MaterialDialog.Builder(context!!)
-                    .customView(R.layout.user_information, true)
+                    .customView(R.layout.dialog_user_information, true)
                     .build()
             val rootView = userInfoDialog.customView!!
 
@@ -103,7 +113,18 @@ class SettingFragment : Fragment(), SettingFragmentView {
         }
 
         userSportHistoryLayout.setOnClickListener {
-            //            TODO("展示运动历史记录")
+            val sportsHistoryDialog = MaterialDialog.Builder(context!!)
+                    .customView(R.layout.dialog_sports_history, false)
+                    .title("运动记录")
+                    .titleGravity(GravityEnum.CENTER)
+                    .negativeText("关闭")
+                    .build()
+
+            val rootView = sportsHistoryDialog.customView!!
+            val sportsHistoryChart: CombinedChart = rootView.findViewById(R.id.sportsHistoryChart)
+            showSportHistory(sportsHistoryChart)
+
+            sportsHistoryDialog.show()
         }
 
         userSettingLayout.setOnClickListener {
@@ -178,6 +199,90 @@ class SettingFragment : Fragment(), SettingFragmentView {
             presenter.logout(user.telephone, token)
         }
 
+        getRandomHistory()
+
+        getXAxisValues()
+
+    }
+
+    private fun showSportHistory(sportsHistoryChart: CombinedChart) {
+        val sportsHistory = CombinedData()
+
+        val lineData = LineData()
+        val distanceData = ArrayList<Entry>()
+        for (i in 0..6) {
+            distanceData.add(Entry(i.toFloat(), distanceHistory[i]))
+        }
+        val lineDataSet = LineDataSet(distanceData, "每日距离")
+        lineDataSet.axisDependency = YAxis.AxisDependency.RIGHT
+        lineDataSet.color = Color.RED
+        lineDataSet.setCircleColor(Color.RED)
+        lineDataSet.lineWidth = 2.0f
+        lineDataSet.valueTextColor = Color.RED
+        lineData.addDataSet(lineDataSet)
+        lineData.setValueFormatter { value, _, _, _ ->
+            DecimalFormat("#.0").format(value)
+        }
+
+        val barData = BarData()
+        val stepsData = ArrayList<BarEntry>()
+        for (i in 0..6) {
+            stepsData.add(BarEntry(i.toFloat(), stepsHistory[i].toFloat()))
+        }
+        val barDataSet = BarDataSet(stepsData, "每日步数")
+        barDataSet.axisDependency = YAxis.AxisDependency.LEFT
+        barDataSet.color = Color.parseColor("#6ccd82")
+        barDataSet.valueTextColor = Color.parseColor("#6ccd82")
+        barData.addDataSet(barDataSet)
+        barData.barWidth = 0.4f
+
+        sportsHistory.setData(lineData)
+        sportsHistory.setData(barData)
+        sportsHistoryChart.data = sportsHistory
+
+        sportsHistoryChart.setScaleEnabled(false)
+        sportsHistoryChart.xAxis.setDrawGridLines(false)
+        sportsHistoryChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        sportsHistoryChart.xAxis.valueFormatter = IndexAxisValueFormatter(getXAxisValues())
+//        sportsHistoryChart.xAxis.labelRotationAngle = -30.0f
+        sportsHistoryChart.xAxis.axisMinimum = -0.5f
+        sportsHistoryChart.xAxis.axisMaximum = 6.5f
+
+        sportsHistoryChart.axisRight.setDrawGridLines(false)
+        sportsHistoryChart.axisRight.setDrawTopYLabelEntry(true)
+        sportsHistoryChart.axisRight.setValueFormatter { value, _ ->
+            "${value}km"
+        }
+        sportsHistoryChart.description.isEnabled = false
+        sportsHistoryChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        sportsHistoryChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+    }
+
+    private fun getRandomHistory() {
+        stepsHistory = ArrayList()
+        distanceHistory = ArrayList()
+        for (i in 0..6) {
+            val steps = MyUtils.getRandomInt(1000, 10000)
+            val distance = MyUtils.getRandomFloat(0.8f, 0.9f) * steps / 1000
+            stepsHistory.add(steps)
+            distanceHistory.add(distance)
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun getXAxisValues(): ArrayList<String> {
+        val dayList = ArrayList<String>()
+
+        val formatter = SimpleDateFormat("M-dd")
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DATE, -6)
+        for (i in 0..6) {
+            val date = calendar.time
+            dayList.add(formatter.format(date))
+            calendar.add(Calendar.DATE, 1)
+        }
+
+        return dayList
     }
 
     @SuppressLint("CommitPrefEdits")

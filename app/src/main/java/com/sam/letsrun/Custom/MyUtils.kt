@@ -22,4 +22,16 @@ object MyUtils {
         return "$year-$month-$date"
     }
 
+    fun getRandomInt(start: Int, end: Int): Int {
+        return (Math.random() * (end - start + 1) + start).toInt()
+    }
+
+    fun getRandomFloat(start: Float, end: Float): Float {
+        return (Math.random() * (end - start + 1) + start).toFloat()
+    }
+
+    fun getRandomDouble(start: Double, end: Double): Double {
+        return (Math.random() * (end - start + 1) + start).toDouble()
+    }
+
 }
