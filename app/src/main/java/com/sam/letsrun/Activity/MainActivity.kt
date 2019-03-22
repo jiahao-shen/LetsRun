@@ -44,8 +44,8 @@ class MainActivity : AppCompatActivity(), MainView {
      * 5个fragment
      * 新闻,音乐,运动,好友,设置
      */
-    private var musicFragment = MusicFragment()
     private var newsFragment = NewsFragment()
+    private var musicFragment = MusicFragment()
     private var sportFragment = SportFragment()
     private var friendFragment = FriendFragment()
     private var settingFragment = SettingFragment()
@@ -73,13 +73,12 @@ class MainActivity : AppCompatActivity(), MainView {
 
         /*--绑定服务--*/
         friendService = Intent(this, FriendService::class.java)
-
-        if (user.isCountStep == 1) {
-            startService(friendService)
-        }
+        startService(friendService)
 
         sportService = Intent(this, SportService::class.java)
-        startService(sportService)
+        if (user.isCountStep == 1) {
+            startService(sportService)
+        }
 
         musicService = Intent(this, MusicService::class.java)
         startService(musicService)

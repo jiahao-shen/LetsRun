@@ -84,5 +84,6 @@ class Const {
         const val MUSIC_STOP = 122
         const val MUSIC_RESUME = 123
         const val MUSIC_COMPLETE = 124
+        const val MUSIC_PERCENT = 125
     }
 }

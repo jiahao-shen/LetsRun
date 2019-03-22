@@ -37,8 +37,6 @@ class MusicAdapter(data: ArrayList<Music>) : BaseQuickAdapter<Music, BaseViewHol
             helper.setTextColor(R.id.musicTitleText, Color.parseColor("#6ccd82"))
                     .setTextColor(R.id.musicArtistText, Color.parseColor("#6ccd82"))
                     .setBackgroundColor(R.id.musicSelectedView, Color.parseColor("#6ccd82"))
-
-
         } else {
             helper.setTextColor(R.id.musicTitleText, Color.BLACK)
                     .setTextColor(R.id.musicArtistText, Color.GRAY)

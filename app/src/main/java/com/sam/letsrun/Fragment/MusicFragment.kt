@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SimpleItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.orhanobut.logger.Logger
 import com.sam.letsrun.Activity.MainActivity
 import com.sam.letsrun.Adapter.MusicAdapter
 import com.sam.letsrun.Custom.Const
@@ -37,7 +39,7 @@ class MusicFragment : Fragment(), MusicFragmentView {
 
     private lateinit var musicAdapter: MusicAdapter
     private lateinit var musicList: ArrayList<Music>
-    private var preSelected = -1
+
     private var currentSelected = -1
     private var isPlaying = false
 
@@ -50,24 +52,32 @@ class MusicFragment : Fragment(), MusicFragmentView {
         super.onViewCreated(view, savedInstanceState)
 
         presenter.mView = this
+        presenter.loadLocalMusic(activity!!)
 
         playButton.setOnClickListener {
             if (isPlaying) {
                 isPlaying = false
                 playButton.setImageResource(R.drawable.ic_music_start)
-                EventBus.getDefault().postSticky(MusicController(Const.MUSIC_PAUSE, currentSelected))
+
+                EventBus.getDefault().postSticky(MusicController(Const.MUSIC_PAUSE, null))
             } else {
                 isPlaying = true
                 playButton.setImageResource(R.drawable.ic_music_pause)
+
                 if (currentSelected == -1) {
                     currentSelected = 0
                     (musicAdapter.getItem(currentSelected) as Music).selected = true
                     musicAdapter.notifyItemChanged(currentSelected)
-                    EventBus.getDefault().postSticky(MusicController(Const.MUSIC_START, currentSelected))
+
+                    EventBus.getDefault().postSticky(MusicController(Const.MUSIC_START, musicList[currentSelected].data))
                 } else {
-                    EventBus.getDefault().postSticky(MusicController(Const.MUSIC_RESUME, currentSelected))
+                    EventBus.getDefault().postSticky(MusicController(Const.MUSIC_RESUME, null))
                 }
             }
+        }
+
+        musicRefreshLayout.setOnRefreshListener {
+            presenter.loadLocalMusic(activity!!)
         }
     }
 
@@ -84,55 +94,58 @@ class MusicFragment : Fragment(), MusicFragmentView {
             Const.MUSIC_COMPLETE -> {
                 isPlaying = true
                 playButton.setImageResource(R.drawable.ic_music_pause)
-
-                preSelected = currentSelected
-                (musicAdapter.getItem(preSelected) as Music).selected = false
-                musicAdapter.notifyItemChanged(preSelected)
-
+                (musicAdapter.getItem(currentSelected) as Music).selected = false
+                musicAdapter.notifyItemChanged(currentSelected)
                 currentSelected = (currentSelected + 1) % musicList.size
                 (musicAdapter.getItem(currentSelected) as Music).selected = true
                 musicAdapter.notifyItemChanged(currentSelected)
-                preSelected = currentSelected
 
-                EventBus.getDefault().postSticky(MusicController(Const.MUSIC_START, currentSelected))
+                EventBus.getDefault().postSticky(MusicController(Const.MUSIC_START, musicList[currentSelected].data))
+            }
+            Const.MUSIC_PERCENT -> {
+                Logger.e(event.info.toString())
+                val percent = (100 * (event.info as Double)).toInt()
+                playButton.setProgress(percent, false)
             }
         }
     }
 
+    override fun loadLocalMusicSuccess(musics: ArrayList<Music>) {
+        musicList = musics
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessage(event: EventMusicList) {
-        musicList = event.musicList
-        if (musicList.size == 0) {
-            toast("音乐加载失败,请稍后再试")
-        } else {
-            musicAdapter = MusicAdapter(musicList)
-            musicRecyclerView.layoutManager = LinearLayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
-            musicRecyclerView.adapter = musicAdapter
-            val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-            decoration.setDrawable(ContextCompat.getDrawable(this.context!!, R.drawable.friend_list_decoration)!!)
-            musicRecyclerView.addItemDecoration(decoration)
-            musicRefreshLayout.finishRefresh(true)
-            musicAdapter.setOnItemClickListener { _, _, position ->
+        musicAdapter = MusicAdapter(musicList)
+        musicRecyclerView.layoutManager = LinearLayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
+        musicRecyclerView.adapter = musicAdapter
+        val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        decoration.setDrawable(ContextCompat.getDrawable(this.context!!, R.drawable.friend_list_decoration)!!)
+        musicRecyclerView.addItemDecoration(decoration)
+        (musicRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        musicRefreshLayout.finishRefresh(true)
+        musicAdapter.setOnItemClickListener { _, _, position ->
+            if (currentSelected != -1) {
+                (musicAdapter.getItem(currentSelected) as Music).selected = false
+                musicAdapter.notifyItemChanged(currentSelected)
+            }
+            if (currentSelected != position) {
                 currentSelected = position
-                if (preSelected != -1) {
-                    (musicAdapter.getItem(preSelected) as Music).selected = false
-                    musicAdapter.notifyItemChanged(preSelected)
-                }
                 (musicAdapter.getItem(currentSelected) as Music).selected = true
                 musicAdapter.notifyItemChanged(currentSelected)
-                if (currentSelected != preSelected) {
-                    preSelected = currentSelected
-                    EventBus.getDefault().postSticky(MusicController(Const.MUSIC_START, currentSelected))
-                    isPlaying = true
-                    playButton.setImageResource(R.drawable.ic_music_pause)
-                }
+                isPlaying = true
+                playButton.setImageResource(R.drawable.ic_music_pause)
+
+                EventBus.getDefault().postSticky(MusicController(Const.MUSIC_START, musicList[currentSelected].data))
+
             }
         }
+    }
+
+    override fun loadLocalMusicFailed() {
+        toast("音乐加载失败,请稍后再试")
     }
 
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
     }
+
 }// Required empty public constructor
