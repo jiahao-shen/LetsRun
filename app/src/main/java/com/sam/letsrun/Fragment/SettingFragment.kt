@@ -244,7 +244,6 @@ class SettingFragment : Fragment(), SettingFragmentView {
         sportsHistoryChart.xAxis.setDrawGridLines(false)
         sportsHistoryChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
         sportsHistoryChart.xAxis.valueFormatter = IndexAxisValueFormatter(getXAxisValues())
-//        sportsHistoryChart.xAxis.labelRotationAngle = -30.0f
         sportsHistoryChart.xAxis.axisMinimum = -0.5f
         sportsHistoryChart.xAxis.axisMaximum = 6.5f
 

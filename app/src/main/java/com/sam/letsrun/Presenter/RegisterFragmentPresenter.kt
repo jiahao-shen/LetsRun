@@ -61,8 +61,8 @@ class RegisterFragmentPresenter {
             mView.codeNotNull()
         }
         else -> {
-            mView.codeCheckSuccess()
-//            SMSSDK.submitVerificationCode("86", telephone, code)
+//            mView.codeCheckSuccess()
+            SMSSDK.submitVerificationCode("86", telephone, code)
         }
     }
 
@@ -133,7 +133,7 @@ class RegisterFragmentPresenter {
                         Logger.json(Gson().toJson(result))
                         when (result.msg) {
                             Const.TELEPHONE_NOT_EXIST -> {
-//                                SMSSDK.getVerificationCode("86", telephone)
+                                SMSSDK.getVerificationCode("86", telephone)
                             }
                             Const.TELEPHONE_ALREADY_EXIST -> {
                                 mView.telephoneAlreadyExist()

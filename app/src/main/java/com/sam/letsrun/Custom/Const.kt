@@ -10,10 +10,8 @@ class Const {
     companion object {
 
         /*--ADDRESS--*/
-//        private const val BASE_IP = "120.78.218.59" //阿里云服务器
-//        const val BASE_HTTP_ADDRESS = "http://$BASE_IP/AppService/app/"
-//        const val BASE_WEBSOCKET_ADDRESS = "ws://$BASE_IP:8000"
-        private const val BASE_IP = "192.168.229.238"
+        private const val BASE_IP = "120.78.218.59" //阿里云服务器
+//        private const val BASE_IP = "192.168.229.238"
         const val BASE_HTTP_ADDRESS = "http://$BASE_IP/LetsRunService/app/"
         const val IMAGE_ADDRESS = "http://$BASE_IP/LetsRunService/UserImage/"
         const val BASE_WEBSOCKET_ADDRESS = "ws://$BASE_IP:8000"
